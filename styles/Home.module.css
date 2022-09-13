@@ -10,6 +10,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+}
+
+.main h1 {
+  font-size: 72px;
+  color: white;
+}
+
+.main span {
+  color: rgb(46, 41, 189);
 }
 
 .footer {
