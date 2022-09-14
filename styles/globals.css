@@ -4,6 +4,7 @@ body {
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: cover;
+  height: 100vh;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -27,4 +28,11 @@ a {
     color: white;
     background: black;
   }
+}
+
+:root{
+  --text-purple: #3f3a83;
+  --text-white-100: rgba(229,231,235, 1);
+  --text-purple-dark: rgb(70, 33, 77);
+  --text-black: rgba(17,24,39,1);
 }
