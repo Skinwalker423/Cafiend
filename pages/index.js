@@ -17,8 +17,10 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <Image src={'/hero-image.png'} width={1000} height={500} />
         <Banner/>
+        <div className={styles.heroImage}>
+          <Image src={'/hero-image.png'} width={700} height={400} />
+        </div>
       </main>
     </div>
   )

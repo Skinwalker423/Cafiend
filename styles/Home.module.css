@@ -21,6 +21,13 @@
   ;
 }
 
+.heroImage{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 1;
+}
+
 /** Breakpoints:
   sm: min-width: 640px;
   md: min-width: 768px;
@@ -67,6 +74,10 @@
       /* 64px */
     ;
   }
+
+  .heroImage{
+    right: 20%;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -89,5 +100,9 @@
     padding-right: 2rem
       /* 32px */
     ;
+  }
+
+  .heroImage{
+    right: 20%;
   }
 }
