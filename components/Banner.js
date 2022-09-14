@@ -1,13 +1,17 @@
 import React from 'react'
 import { useState } from 'react'
 import styles from './Banner.module.css'
+import { useRouter } from 'next/router'
 
 const Banner = () => {
 
-    const [toggleButton, setToggleButton] = useState(false)
+    const [toggleButton, setToggleButton] = useState(false);
+
+    const router = useRouter();
 
 const bannerButtonHandler = () => {
-    setToggleButton((bool) => !bool)
+    setToggleButton((bool) => !bool);
+    router.push('/coffee-store');
 }
 
   return (

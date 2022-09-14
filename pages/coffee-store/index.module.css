@@ -1,0 +1,20 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 90%;
+    height: 50vh;
+    margin: 20px;
+    padding: 20px;
+    border: 2px white solid;
+    background-color: aqua;
+
+}
+
+@media screen and (min-width: 800px) {
+    .container{
+        width: 50%;
+        height: 80vh;
+    }
+}

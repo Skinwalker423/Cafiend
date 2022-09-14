@@ -1,0 +1,11 @@
+.coffeeStoreCardContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 200px;
+    height: 200px;
+    border: 2px white solid;
+    padding: 20px;
+    border-radius: 1rem;
+}
