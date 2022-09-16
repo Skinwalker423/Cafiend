@@ -13,6 +13,7 @@ export default function Home() {
     <div className={styles.container}>
       <Head>
         <title>CAFIEND CONNOISSEUR</title>
+        <meta content='Locate your favorite nearby coffee shops' />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
