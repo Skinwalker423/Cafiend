@@ -1,0 +1,29 @@
+.coffeeStoreCardContainer{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 35vh;
+    border: 2px white solid;
+    padding: 20px;
+    border-radius: 1rem;
+    background-color: palevioletred;
+
+}
+
+.coffeeStoreCardContainer:hover{
+    background-color: white;
+}
+
+.title{
+    margin-bottom: 1rem;
+}
+
+.image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px black solid;
+    border-radius: 1rem;
+    background-color: black;
+}
+
