@@ -5,11 +5,13 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import coffeeStoreData from '../coffee-stores.json'
 
 export default function Home() {
 
   const [toggleButton, setToggleButton] = useState(false);
+  const [coffeeStores, setCoffeeStores] = useState([]);
 
   const router = useRouter();
   const basePath = router.asPath;
@@ -17,6 +19,11 @@ export default function Home() {
 
   const id = '423';
   const title = 'Starbucks'
+
+  useEffect(() => {
+    setCoffeeStores(coffeeStoreData);
+  }, [])
+
 
   return (
     <div className={styles.container}>
@@ -32,39 +39,24 @@ export default function Home() {
           setToggleButton={setToggleButton}
         />
         <div className={styles.heroImage}>
-          <Image src={'/hero-image.png'} width={700} height={400} />
+          <Image src={'/static/hero-image.png'} width={700} height={400} />
         </div>
         {toggleButton && <div>
           <Header title='All Stores' />
           <div className={styles.listContainer}>
-            <CoffeeStoreCard 
-            id={id}
-            basePath={basePath}
-            title={title}
-            imageUrl={imageUrl}
-            href={`/coffee-store/${title}`}
-            />
-            <CoffeeStoreCard 
-            id={id}
-            basePath={basePath}
-            title={title}
-            imageUrl={imageUrl}
-            href={`/coffee-store/${title}`}
-            />
-            <CoffeeStoreCard 
-            id={id}
-            basePath={basePath}
-            title={title}
-            imageUrl={imageUrl}
-            href={`/coffee-store/${title}`}
-            />
-            <CoffeeStoreCard 
-            id={id}
-            basePath={basePath}
-            title={title}
-            imageUrl={imageUrl}
-            href={`/coffee-store/${title}`}
-            />
+            {coffeeStores.map(({id, imgUrl, name }) => {
+              console.log(imgUrl)
+              return (
+                <CoffeeStoreCard 
+                  id={id}
+                  title={name}
+                  imageUrl={imgUrl}
+                  href={`/coffee-store/${name}`}
+                  key={id}
+                />
+              )
+            })}
+            
           </div>
         </div>}
       </main>
