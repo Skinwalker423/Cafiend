@@ -1,4 +1,11 @@
-.container{
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.cardContainer{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,9 +19,24 @@
 
 }
 
+.details{
+    margin: 20px;
+    border: 1px white solid;
+    width: 90%;
+    height: 50vh;
+}
+
 @media screen and (min-width: 800px) {
-    .container{
+    .cardContainer{
         width: 50%;
         height: 80vh;
+    }
+    .container{
+        flex-direction: row;
+        height: 80vh;
+    }
+    .details{
+        height: 80vh;
+        width: 50%;
     }
 }
