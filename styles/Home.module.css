@@ -2,6 +2,7 @@
   margin-bottom: 14rem
     /* 224px */
   ;
+
 }
 
 .main {
@@ -34,6 +35,14 @@
   color: var(--text-white-100);
 }
 
+.listContainer{
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  row-gap: 1.5rem;
+  column-gap: 1.5rem;
+
+}
+
 /** Breakpoints:
   sm: min-width: 640px;
   md: min-width: 768px;
@@ -50,7 +59,15 @@
     padding-right: 1rem
       /* 16px */
     ;
+
+    
   }
+
+  .listContainer {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 5rem;
+      column-gap: 5rem;
+    }
 
   .main {
     margin-top: 3rem
@@ -84,6 +101,7 @@
   .heroImage{
     right: 20%;
   }
+
 }
 
 @media (min-width: 1024px) {
@@ -94,6 +112,12 @@
     padding-right: 2.5rem
       /* 40px */
     ;
+  }
+
+  .listContainer {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 5rem;
+    column-gap: 2rem;
   }
 
   .main {
