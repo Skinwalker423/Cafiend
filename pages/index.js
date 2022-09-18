@@ -64,7 +64,6 @@ export default function Home({coffeeStores}) {
             <Header title='Local Stores' />
             <div className={styles.listContainer}>
             {coffeeStores.map(({id, imgUrl, name }) => {
-              console.log(imgUrl)
               return (
                 <CoffeeStoreCard 
                   title={name}
