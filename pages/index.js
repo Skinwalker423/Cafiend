@@ -1,28 +1,31 @@
 import Head from 'next/head'
 import Banner from '../components/Banner'
 import styles from '../styles/Home.module.css'
-import { useRouter } from 'next/router'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
 import { useEffect, useState } from 'react'
-import coffeeStoreData from '../coffee-stores.json'
+import coffeeStoresData from '../data/coffee-stores.json'
 
-export default function Home() {
+
+export async function getStaticProps(context) {
+
+  console.log('get static props shows here')
+
+  // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
+  //   .then((res) => res.json())
+  //   .catch((e) => console.log(e))
+
+  return {
+    props: {
+      coffeeStores: coffeeStoresData
+    }, // will be passed to the page component as props
+  }
+}
+
+export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
-  const [coffeeStores, setCoffeeStores] = useState([]);
-
-  const router = useRouter();
-  const basePath = router.asPath;
-  const imageUrl = '/static/hero-image.png'
-
-  const id = '423';
-  const title = 'Starbucks'
-
-  useEffect(() => {
-    setCoffeeStores(coffeeStoreData);
-  }, [])
 
 
   return (
@@ -41,24 +44,39 @@ export default function Home() {
         <div className={styles.heroImage}>
           <Image src={'/static/hero-image.png'} width={700} height={400} />
         </div>
-        {toggleButton && <div>
-          <Header title='All Stores' />
-          <div className={styles.listContainer}>
+          <div>
+            {coffeeStores.length ? <div>
+              <Header title='All Stores' />
+              <div className={styles.listContainer}>
+                {coffeeStores.map(({id, name, imgUrl }) => {
+                  return (
+                    <CoffeeStoreCard 
+                      title={name}
+                      imageUrl={imgUrl}
+                      href={`/coffee-store/${id}`}
+                      key={id}
+                    />
+                  )
+                })}
+              </div>
+            </div> : 'Loading...'}
+          {toggleButton && <div className={styles.localStoresContainer}>
+            <Header title='Local Stores' />
+            <div className={styles.listContainer}>
             {coffeeStores.map(({id, imgUrl, name }) => {
-              console.log(imgUrl)
               return (
                 <CoffeeStoreCard 
-                  id={id}
                   title={name}
                   imageUrl={imgUrl}
-                  href={`/coffee-store/${name}`}
+                  href={`/coffee-store/${id}`}
                   key={id}
                 />
               )
             })}
             
-          </div>
-        </div>}
+            </div>
+          </div>}
+        </div>
       </main>
     </div>
   )
