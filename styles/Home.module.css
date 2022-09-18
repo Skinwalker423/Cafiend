@@ -43,6 +43,10 @@
 
 }
 
+.localStoresContainer{
+  margin-top: 2rem;
+}
+
 /** Breakpoints:
   sm: min-width: 640px;
   md: min-width: 768px;
