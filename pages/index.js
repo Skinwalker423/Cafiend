@@ -5,7 +5,7 @@ import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
 import { useEffect, useState } from 'react'
-import coffeeStores from '../data/coffee-stores.json'
+import coffeeStoresData from '../data/coffee-stores.json'
 
 
 export async function getStaticProps(context) {
@@ -17,7 +17,9 @@ export async function getStaticProps(context) {
   //   .catch((e) => console.log(e))
 
   return {
-    props: {coffeeStores}, // will be passed to the page component as props
+    props: {
+      coffeeStores: coffeeStoresData
+    }, // will be passed to the page component as props
   }
 }
 
@@ -42,21 +44,22 @@ export default function Home({coffeeStores}) {
         <div className={styles.heroImage}>
           <Image src={'/static/hero-image.png'} width={700} height={400} />
         </div>
-        <div>
-          <Header title='All Stores' />
-          <div className={styles.listContainer}>
-            {coffeeStores.map(({id, name, imgUrl }) => {
-              return (
-                <CoffeeStoreCard 
-                  title={name}
-                  imageUrl={imgUrl}
-                  href={`/coffee-store/${id}`}
-                  key={id}
-                />
-              )
-            })}
-            
-          </div>
+          <div>
+            {coffeeStores.length ? <div>
+              <Header title='All Stores' />
+              <div className={styles.listContainer}>
+                {coffeeStores.map(({id, name, imgUrl }) => {
+                  return (
+                    <CoffeeStoreCard 
+                      title={name}
+                      imageUrl={imgUrl}
+                      href={`/coffee-store/${id}`}
+                      key={id}
+                    />
+                  )
+                })}
+              </div>
+            </div> : 'Loading...'}
           {toggleButton && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>

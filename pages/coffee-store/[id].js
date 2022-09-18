@@ -35,16 +35,17 @@ const CoffeeStorePage = () => {
         <title>{coffeeStore.name}</title>
       </Head>
       <div className={styles.cardContainer}>
-      <h1>{coffeeStore.name}</h1>
-      <Image src={coffeeStore.imgUrl} width={500} height={500} />
-      <Link href='/'>Back to all stores</Link>
+        <h1>{coffeeStore.name}</h1>
+        <div className={styles.imageWrapper}>
+          <Image layout='fill' className={styles.image} src={coffeeStore.imgUrl} width={200} height={200} />
+        </div>
+        <Link href='/'>Back to all stores</Link>
       </div>
-      <div className={styles.details}>
-        stuff on the right
-        <div>
-          <p>{coffeeStore.address}</p>
-          <p>{coffeeStore.neighbourhood}</p>
-          <a href={coffeeStore.websiteUrl} target="_blank" >{coffeeStore.websiteUrl}</a>
+      <div className={styles.detailsContainer}>
+        <div className={styles.details}>
+          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{coffeeStore.address}</h3>
+          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{coffeeStore.neighbourhood}</h3>
+          <a href={coffeeStore.websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{coffeeStore.websiteUrl}</a>
         </div>
       </div>
     </div>
