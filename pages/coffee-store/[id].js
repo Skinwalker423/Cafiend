@@ -15,10 +15,19 @@ export function getStaticProps({params}) {
     }
 }
 
+
+
+
 export function getStaticPaths() {
+
+  const pathId = coffeeStoresData.map((coffeeStore) => {
+    return {params: {id: coffeeStore.id.toString()}}
+  })
+
+
   return{
-    paths: [{params: {id: '0'}}, {params: {id: '1'}}, {params: {id: '300'}} ],
-    fallback: false,
+    paths: pathId,
+    fallback: true,
   } 
 }
 
@@ -27,29 +36,29 @@ const CoffeeStorePage = ({coffeeStore}) => {
     const router = useRouter()
     const {id} = router.query;
 
-
-    if(!coffeeStore || !id){
+    if(router.isFallback){
       return <div>Loading...</div>
     }
-
+    
+    const {imgUrl, websiteUrl, neighbourhood, address, name} = coffeeStore;
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>{coffeeStore.name}</title>
+        <title>{name}</title>
       </Head>
       <div className={styles.cardContainer}>
-        <h1>{coffeeStore.name}</h1>
+        <h1>{name}</h1>
         <div className={styles.imageWrapper}>
-          <Image layout='fill' className={styles.image} src={coffeeStore.imgUrl} />
+          <Image layout='fill' className={styles.image} src={imgUrl} />
         </div>
         <Link href='/'>Back to all stores</Link>
       </div>
       <div className={styles.detailsContainer}>
         <div className={styles.details}>
-          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{coffeeStore.address}</h3>
-          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{coffeeStore.neighbourhood}</h3>
-          <a href={coffeeStore.websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{coffeeStore.websiteUrl}</a>
+          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</h3>
+          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</h3>
+          <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a>
         </div>
       </div>
     </div>
