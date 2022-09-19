@@ -56,8 +56,8 @@ const CoffeeStorePage = ({coffeeStore}) => {
       </div>
       <div className={styles.detailsContainer}>
         <div className={styles.details}>
-          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</h3>
-          <h3><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</h3>
+          <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</p>
+          <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</p>
           <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a>
         </div>
       </div>
