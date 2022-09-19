@@ -47,18 +47,17 @@ const CoffeeStorePage = ({coffeeStore}) => {
       <Head>
         <title>{name}</title>
       </Head>
+      <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
-        <h1>{name}</h1>
         <div className={styles.imageWrapper}>
           <Image layout='fill' className={styles.image} src={imgUrl} />
         </div>
-        <Link href='/'>Back to all stores</Link>
-      </div>
-      <div className={styles.detailsContainer}>
-        <div className={styles.details}>
-          <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</p>
-          <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</p>
-          <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a>
+        <div className={styles.detailsContainer}>
+          <div className={styles.details}>
+            <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</p>
+            <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</p>
+            <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a>
+          </div>
         </div>
       </div>
     </div>
