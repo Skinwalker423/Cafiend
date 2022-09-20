@@ -8,6 +8,7 @@ import coffeeStoresData from '../../data/coffee-stores.json';
 import Footer from '../../components/footer';
 import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
 import {GoLocation} from 'react-icons/go';
+import cls from 'classnames'
 
 
 export function getStaticProps({params}) {
@@ -59,12 +60,15 @@ const CoffeeStorePage = ({coffeeStore}) => {
       <Head>
         <title>{name}</title>
       </Head>
+      <div className={styles.homeLink}>
+        <Link href={'/'}>Back to Stores</Link>  
+      </div>
       <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
         <div className={styles.imageWrapper}>
           <Image layout='fill' className={styles.image} src={imgUrl} alt={name} />
         </div>
-        <div className={styles.detailsContainer}>
+        <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
             <p><span className={styles.icon}><GoLocation /></span>{address}</p>
             <p><span className={styles.icon}><GoLocation /></span>{neighbourhood}</p>
