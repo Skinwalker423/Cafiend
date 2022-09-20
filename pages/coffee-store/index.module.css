@@ -66,15 +66,28 @@
     padding: 0 20px;
 }
 
+.likes{
+    color: red;
+    font-size: xx-large;
+}
+
+.liked{
+    background-color: grey;
+    color: darkgray;
+    height: 50px;
+    width: 100px;
+}
+
 .buttonWrapper{
     margin-left: 20px;
 }
 
-.buttonWrapper button{
-    background-color: green;
+.likeButton{
+    background-color: blue;
     height: 50px;
     width: 100px;
 }
+
 
 /** Breakpoints:
   sm: min-width: 640px;
@@ -88,23 +101,33 @@
     
 
     .cardContainer {
-        width: 90%;
+        width: 80%;
         height: 100vh;
     }
 
     .detailsContainer {
         height: 25vh;
         width: 90%;
+
     }
 
     .details {
         justify-content: center;
-        line-height: 4rem;
+        line-height: 3rem;
         font-size: medium;
     }
 
     .imageWrapper{
         height: 50vh;
+    }
+
+    .buttonWrapper{
+        height: 50px;
+        
+    }
+
+    .likeButton{
+        background-color: blue;
     }
 
 }
@@ -114,18 +137,22 @@
 @media screen and (min-width: 768px) {
 
     .details{
-        line-height: 4.5rem;
+        line-height: 2.5rem;
         font-size: 1rem;
 
     }
 
     .imageWrapper{
         width: 80%;
-        height: 60vh;
+        height: 40vh;
     }
 
     .detailsContainer{
-        width: 50%;
+        width: 80%;
+    }
+
+    .likeButton{
+        color: white;
     }
 
 }
@@ -141,6 +168,7 @@
         flex-direction: row;
         justify-content: center;
         align-items: flex-start;
+        width: 90%;
     }
 
     .detailsContainer {
@@ -187,5 +215,6 @@
         width: 80%;
         
     }
+
 
 }

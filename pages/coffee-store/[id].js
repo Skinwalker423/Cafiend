@@ -6,6 +6,9 @@ import styles from './index.module.css'
 import Head from 'next/head';
 import coffeeStoresData from '../../data/coffee-stores.json';
 import Footer from '../../components/footer';
+import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
+import {GoLocation} from 'react-icons/go';
+
 
 export function getStaticProps({params}) {
     console.log(params);
@@ -59,16 +62,16 @@ const CoffeeStorePage = ({coffeeStore}) => {
       <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
         <div className={styles.imageWrapper}>
-          <Image layout='fill' className={styles.image} src={imgUrl} />
+          <Image layout='fill' className={styles.image} src={imgUrl} alt={name} />
         </div>
         <div className={styles.detailsContainer}>
           <div className={styles.details}>
-            <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</p>
-            <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</p>
+            <p><span className={styles.icon}><GoLocation /></span>{address}</p>
+            <p><span className={styles.icon}><GoLocation /></span>{neighbourhood}</p>
             {/* <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a> */}
-            <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{likeCount}</p>
+            <p className={styles.likes}><span className={styles.icon}>{voted ? <AiFillHeart /> : <AiOutlineHeart />}</span>{likeCount}</p>
             <div className={styles.buttonWrapper}>
-              <button disabled={voted} onClick={likeButtonHandler}>Like</button>
+              <button className={voted ? styles.liked : styles.likeButton} disabled={voted} onClick={likeButtonHandler}>Like</button>
             </div>
           </div>
         </div>
