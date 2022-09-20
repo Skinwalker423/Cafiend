@@ -66,6 +66,16 @@
     padding: 0 20px;
 }
 
+.buttonWrapper{
+    margin-left: 20px;
+}
+
+.buttonWrapper button{
+    background-color: green;
+    height: 50px;
+    width: 100px;
+}
+
 /** Breakpoints:
   sm: min-width: 640px;
   md: min-width: 768px;

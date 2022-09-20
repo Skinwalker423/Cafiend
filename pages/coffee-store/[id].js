@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from './index.module.css'
 import Head from 'next/head';
 import coffeeStoresData from '../../data/coffee-stores.json';
+import Footer from '../../components/footer';
 
 export function getStaticProps({params}) {
     console.log(params);
@@ -36,11 +37,19 @@ const CoffeeStorePage = ({coffeeStore}) => {
     const router = useRouter()
     const {id} = router.query;
 
+    const [likeCount, setLikeCount] = useState(1);
+    const [voted, setVoted] = useState(false);
+
     if(router.isFallback){
       return <div>Loading...</div>
     }
     
     const {imgUrl, websiteUrl, neighbourhood, address, name} = coffeeStore;
+
+    const likeButtonHandler = () => {
+        setLikeCount((count) => count + 1);
+        setVoted(true);
+    }
 
   return (
     <div className={styles.container}>
@@ -56,10 +65,15 @@ const CoffeeStorePage = ({coffeeStore}) => {
           <div className={styles.details}>
             <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{address}</p>
             <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{neighbourhood}</p>
-            <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a>
+            {/* <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a> */}
+            <p><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{likeCount}</p>
+            <div className={styles.buttonWrapper}>
+              <button disabled={voted} onClick={likeButtonHandler}>Like</button>
+            </div>
           </div>
         </div>
       </div>
+      <Footer href={websiteUrl} />
     </div>
   )
 }

@@ -1,22 +1,22 @@
 import React from 'react'
-import styles from '../styles/Home.module.css';
+import styles from './footer.module.css';
 import Image from 'next/image';
 
-const Footer = () => {
+const Footer = ({href}) => {
   return (
-    <footer className={styles.footer}>
-        <div className={styles.linkIcon}>
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            >
-            <span>Brought to you by: Illuminati{' '} </span>
-          </a>
-          <br/>
-          <Image src={'/favicon.ico'} width={50} height={50} />
-        </div>
+    <div className={styles.footer}>
+      <footer>
+          <div className={styles.linkIcon}>
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              >
+              <span>{href}</span>
+            </a>
+          </div>
       </footer>
+    </div>
   )
 }
 
