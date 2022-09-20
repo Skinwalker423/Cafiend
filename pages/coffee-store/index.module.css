@@ -53,6 +53,8 @@
     background-color: var(--text-white-100);
 }
 
+
+
 .details{
     display: flex;
     flex-direction: column;
@@ -91,9 +93,14 @@
 }
 
 .likeButton{
-    background-color: blue;
+    background-color: var(--text-purple-dark);
     height: 50px;
     width: 100px;
+    cursor: pointer;
+}
+
+.likeButton:hover {
+    background-color: var(--text-purple);
 }
 
 
@@ -133,10 +140,6 @@
     .buttonWrapper{
         height: 50px;
         
-    }
-
-    .likeButton{
-        background-color: blue;
     }
 
 }

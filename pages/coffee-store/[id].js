@@ -8,6 +8,7 @@ import coffeeStoresData from '../../data/coffee-stores.json';
 import Footer from '../../components/footer';
 import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
 import {GoLocation} from 'react-icons/go';
+import {TbLocation} from 'react-icons/tb';
 import cls from 'classnames'
 
 
@@ -51,8 +52,8 @@ const CoffeeStorePage = ({coffeeStore}) => {
     const {imgUrl, websiteUrl, neighbourhood, address, name} = coffeeStore;
 
     const likeButtonHandler = () => {
+        setVoted((bool) => !bool);
         setLikeCount((count) => count + 1);
-        setVoted(true);
     }
 
   return (
@@ -71,7 +72,7 @@ const CoffeeStorePage = ({coffeeStore}) => {
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
             <p><span className={styles.icon}><GoLocation /></span>{address}</p>
-            <p><span className={styles.icon}><GoLocation /></span>{neighbourhood}</p>
+            <p><span className={styles.icon}><TbLocation /></span>{neighbourhood}</p>
             {/* <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a> */}
             <p className={styles.likes}><span className={styles.icon}>{voted ? <AiFillHeart /> : <AiOutlineHeart />}</span>{likeCount}</p>
             <div className={styles.buttonWrapper}>
