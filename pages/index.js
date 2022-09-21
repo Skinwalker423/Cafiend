@@ -4,25 +4,14 @@ import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
-import { useEffect, useState } from 'react'
-import coffeeStoresData from '../data/coffee-stores.json'
+import {useState } from 'react'
+import { getCoffeeStores } from '../lib/coffee-stores'
 
 
 export async function getStaticProps(context) {
 
   console.log('get static props shows here')
-  const options = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: 'fsq3cuad/5f6PTyaicShfKP2jSVLvA9EGqA4MMtBK2DLbT0='
-    }
-  };
-
-  const coffeeStoresApiData = await fetch('https://api.foursquare.com/v3/places/search?query=coffee&ll=43.650271%2C-79.388563&limit=6', options)
-    .then(response => response.json())
-    .catch(err => console.error('error from foursquare', err));
-
+  const coffeeStoresApiData = await getCoffeeStores();
 
   // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
   //   .then((res) => res.json())
@@ -30,7 +19,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      coffeeStores: coffeeStoresApiData.results
+      coffeeStores: coffeeStoresApiData
     }, // will be passed to the page component as props
   }
 }
@@ -60,11 +49,11 @@ export default function Home({coffeeStores}) {
               <Header title='All Stores' />
               <div className={styles.listContainer}>
                 {coffeeStores.map((store) => {
-                  console.log(store.fsq_id);
+
                   return (
                     <CoffeeStoreCard 
                       title={store.name}
-                      imageUrl={'/static/hero-image.png'}
+                      imageUrl={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"}
                       href={`/coffee-store/${store.fsq_id}`}
                       key={store.fsq_id}
                     />
