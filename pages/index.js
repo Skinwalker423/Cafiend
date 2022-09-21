@@ -11,6 +11,18 @@ import coffeeStoresData from '../data/coffee-stores.json'
 export async function getStaticProps(context) {
 
   console.log('get static props shows here')
+  const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'fsq3cuad/5f6PTyaicShfKP2jSVLvA9EGqA4MMtBK2DLbT0='
+    }
+  };
+
+  const coffeeStoresApiData = await fetch('https://api.foursquare.com/v3/places/search?query=coffee&ll=43.650271%2C-79.388563&limit=6', options)
+    .then(response => response.json())
+    .catch(err => console.error('error from foursquare', err));
+
 
   // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
   //   .then((res) => res.json())
@@ -18,7 +30,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      coffeeStores: coffeeStoresData
+      coffeeStores: coffeeStoresApiData.results
     }, // will be passed to the page component as props
   }
 }
@@ -26,7 +38,6 @@ export async function getStaticProps(context) {
 export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
-
 
   return (
     <div className={styles.container}>
@@ -48,13 +59,14 @@ export default function Home({coffeeStores}) {
             {coffeeStores.length ? <div>
               <Header title='All Stores' />
               <div className={styles.listContainer}>
-                {coffeeStores.map(({id, name, imgUrl }) => {
+                {coffeeStores.map((store) => {
+                  console.log(store.fsq_id);
                   return (
                     <CoffeeStoreCard 
-                      title={name}
-                      imageUrl={imgUrl}
-                      href={`/coffee-store/${id}`}
-                      key={id}
+                      title={store.name}
+                      imageUrl={'/static/hero-image.png'}
+                      href={`/coffee-store/${store.fsq_id}`}
+                      key={store.fsq_id}
                     />
                   )
                 })}
