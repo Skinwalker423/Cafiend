@@ -4,13 +4,14 @@ import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
-import { useEffect, useState } from 'react'
-import coffeeStoresData from '../data/coffee-stores.json'
+import {useState } from 'react'
+import { getCoffeeStores } from '../lib/coffee-stores'
 
 
 export async function getStaticProps(context) {
 
   console.log('get static props shows here')
+  const coffeeStoresApiData = await getCoffeeStores();
 
   // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
   //   .then((res) => res.json())
@@ -18,7 +19,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      coffeeStores: coffeeStoresData
+      coffeeStores: coffeeStoresApiData
     }, // will be passed to the page component as props
   }
 }
@@ -26,7 +27,6 @@ export async function getStaticProps(context) {
 export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
-
 
   return (
     <div className={styles.container}>
@@ -48,13 +48,14 @@ export default function Home({coffeeStores}) {
             {coffeeStores.length ? <div>
               <Header title='All Stores' />
               <div className={styles.listContainer}>
-                {coffeeStores.map(({id, name, imgUrl }) => {
+                {coffeeStores.map(({name, fsq_id}) => {
+
                   return (
                     <CoffeeStoreCard 
                       title={name}
-                      imageUrl={imgUrl}
-                      href={`/coffee-store/${id}`}
-                      key={id}
+                      imageUrl={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"}
+                      href={`/coffee-store/${fsq_id}`}
+                      key={fsq_id}
                     />
                   )
                 })}
@@ -63,13 +64,13 @@ export default function Home({coffeeStores}) {
           {toggleButton && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>
-            {coffeeStores.map(({id, imgUrl, name }) => {
+            {coffeeStores.map(({fsq_id, name }) => {
               return (
                 <CoffeeStoreCard 
                   title={name}
-                  imageUrl={imgUrl}
-                  href={`/coffee-store/${id}`}
-                  key={id}
+                  imageUrl={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"}
+                  href={`/coffee-store/${fsq_id}`}
+                  key={fsq_id}
                 />
               )
             })}
