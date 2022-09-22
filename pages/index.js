@@ -4,10 +4,10 @@ import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
-import {useState } from 'react'
+import {useEffect, useState } from 'react'
 import { getCoffeeStores } from '../lib/coffee-stores'
 import useTrackLocation from '../hooks/useTrackLocation'
-import { getLocalCoffeeStores } from '../lib/local-coffee-stores'
+
 
 
 export async function getStaticProps(context) {
@@ -33,6 +33,26 @@ export default function Home({coffeeStores}) {
   const {latlong, handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
   console.log({latlong, locationErrorMsg});
+
+  useEffect(() => {
+    if(latlong){
+
+      const fetchLocalStores = async() => {
+        try{
+          const localCoffeeStoresData = await getCoffeeStores(latlong);
+          
+          if(localCoffeeStoresData){
+            setLocalCoffeeStores(localCoffeeStoresData);
+            console.log(localCoffeeStoresData);
+          }
+        }catch(e){
+          console.log('error fetching local stores:', e.message)
+        }
+      }
+
+      fetchLocalStores();
+    }
+  }, [latlong])
 
   const bannerButtonHandler = async() => {
     handleTrackLocation();
