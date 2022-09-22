@@ -5,8 +5,9 @@ import Image from 'next/image';
 import styles from './index.module.css'
 import Head from 'next/head';
 import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
-import {GoLocation} from 'react-icons/go';
+import {GoLocation, GoArrowLeft} from 'react-icons/go';
 import {TbLocation} from 'react-icons/tb';
+import {HiOutlineArrowLeft} from 'react-icons/hi'
 import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
 
@@ -64,6 +65,7 @@ const CoffeeStorePage = ({coffeeStore}) => {
         <title>{name}</title>
       </Head>
       <div className={styles.homeLink}>
+        <HiOutlineArrowLeft />
         <Link href={'/'}>Back to Stores</Link>  
       </div>
       <h1 className={styles.storeTitle}>{name}</h1>
