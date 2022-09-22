@@ -3,30 +3,37 @@ import { getCoffeeStores } from '../lib/coffee-stores';
 
 const useTrackLocation = () => {
 
-  const [locationError, setLocationError] = useState('');
+  const [locationErrorMsg, setLocationErrorMsg] = useState('');
   const [latlong, setLatlong] = useState('');
+  const [isFindingLocation, setIsFindingLocation] = useState(false);
 
   const success = (position) => {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        setLatlong(`${latitude}%2C${longitude}`);
-        setLocationError('');
+        setLatlong(`${latitude},${longitude}`);
+        setLocationErrorMsg('');
+        setIsFindingLocation(false);
   }
 
   const error = () => {
-    setLocationError('Unable to retrieve your location');
+    setLocationErrorMsg('Unable to retrieve your location');
+    setIsFindingLocation(false);
   }
 
   const handleTrackLocation = () => {
+    setIsFindingLocation(true)
     if (!navigator.geolocation) {
-        setLocationError('Geolocation is not supported by your browser')
+        setLocationErrorMsg('Geolocation is not supported by your browser')
     } else {
         navigator.geolocation.getCurrentPosition(success, error);
     } 
   }
 
   return {
-    latlong
+    latlong,
+    handleTrackLocation,
+    locationErrorMsg,
+    isFindingLocation
   }
 }
 

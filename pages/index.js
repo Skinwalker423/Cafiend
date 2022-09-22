@@ -6,6 +6,8 @@ import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
 import {useState } from 'react'
 import { getCoffeeStores } from '../lib/coffee-stores'
+import useTrackLocation from '../hooks/useTrackLocation'
+import { getLocalCoffeeStores } from '../lib/local-coffee-stores'
 
 
 export async function getStaticProps(context) {
@@ -27,6 +29,20 @@ export async function getStaticProps(context) {
 export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
+  const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
+  const {latlong, handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
+
+  console.log({latlong, locationErrorMsg});
+
+  const bannerButtonHandler = async() => {
+    handleTrackLocation();
+    // const localCoffeeStoresData = await getLocalCoffeeStores(latlong);
+    // if(localCoffeeStoresData){
+    //   setLocalCoffeeStores(localCoffeeStoresData);
+    //   console.log(localCoffeeStoresData);
+    // }
+
+  }
 
   return (
     <div className={styles.container}>
@@ -40,10 +56,14 @@ export default function Home({coffeeStores}) {
         <Banner 
           toggleButton={toggleButton}
           setToggleButton={setToggleButton}
+          setLocalCoffeeStores={setLocalCoffeeStores}
+          bannerButtonHandler={bannerButtonHandler}
+          isFindingLocation={isFindingLocation}
         />
         <div className={styles.heroImage}>
           <Image src={'/static/hero-image.png'} width={700} height={400} />
         </div>
+        {locationErrorMsg && <h1>Something went wrong: {locationErrorMsg}</h1>}
           <div>
             {coffeeStores.length ? <div>
               <Header title='All Stores' />
@@ -61,10 +81,10 @@ export default function Home({coffeeStores}) {
                 })}
               </div>
             </div> : 'Loading...'}
-          {toggleButton && <div className={styles.localStoresContainer}>
+          {localCoffeeStores && localCoffeeStores.length && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>
-            {coffeeStores.map(({fsq_id, name }) => {
+            {localCoffeeStores.map(({fsq_id, name }) => {
               return (
                 <CoffeeStoreCard 
                   title={name}
