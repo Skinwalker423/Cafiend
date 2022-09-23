@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { StoreContext } from '../pages/_app';
-import { ACTION_TYPES } from '../pages/_app';
+import { StoreContext, ACTION_TYPES } from '../pages/_app';
 
 
 const useTrackLocation = () => {
