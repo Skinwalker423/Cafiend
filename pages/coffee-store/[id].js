@@ -1,22 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './index.module.css'
 import Head from 'next/head';
 import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
-import {GoLocation, GoArrowLeft} from 'react-icons/go';
+import {GoLocation} from 'react-icons/go';
 import {TbLocation} from 'react-icons/tb';
 import {HiOutlineArrowLeft} from 'react-icons/hi'
 import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
+import { StoreContext } from '../_app';
 
 
 export async function getStaticProps({params}) {
 
-    const coffeeStoresData = await getCoffeeStores();
+    const {localCoffeeStores} = useContext(StoreContext);
 
-    const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.fsq_id);
+    console.log(localCoffeeStores);
+    // const coffeeStoresData = await getCoffeeStores();
+
+    // const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.fsq_id);
+    const findCoffeeStore = localCoffeeStores.find((store) => params.id === store.fsq_id);
 
     return{
       props: {

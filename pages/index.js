@@ -8,6 +8,7 @@ import {useEffect, useState, useContext } from 'react'
 import { StoreContext } from './_app'
 import { getCoffeeStores } from '../lib/coffee-stores'
 import useTrackLocation from '../hooks/useTrackLocation'
+import { ACTION_TYPES } from './_app'
 
 
 
@@ -31,22 +32,20 @@ export async function getStaticProps(context) {
 export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
-  const {localCoffeeStores, latlong, setLocalCoffeeStores} = useContext(StoreContext);
-  // const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
+  const {state, dispatch} = useContext(StoreContext);
+  const {localCoffeeStores, latLong} = state;
   const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
   const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
-  console.log({latlong, locationErrorMsg});
 
   useEffect(() => {
-    if(latlong){
+    if(latLong){
       const fetchLocalStores = async() => {
         try{
-          const localCoffeeStoresData = await getCoffeeStores(latlong);
+          const localCoffeeStoresData = await getCoffeeStores(latLong);
           
           if(localCoffeeStoresData){
-            setLocalCoffeeStores(localCoffeeStoresData);
-            console.log(localCoffeeStoresData);
+            dispatch({type: ACTION_TYPES.SET_LOCAL_COFFEE_STORES, payload: localCoffeeStoresData});
           }
         }catch(e){
           setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
@@ -55,14 +54,12 @@ export default function Home({coffeeStores}) {
 
       fetchLocalStores();
     }
-  }, [latlong])
+  }, [latLong])
 
   const bannerButtonHandler = async() => {
     handleTrackLocation();
 
   }
-
-  console.log(localCoffeeStores);
 
   return (
     <div className={styles.container}>
