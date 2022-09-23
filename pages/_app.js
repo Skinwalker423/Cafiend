@@ -1,42 +1,41 @@
 import '../styles/globals.css'
-import { createContext, useEffect } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import useTrackLocation from '../hooks/useTrackLocation';
 import { getCoffeeStores } from '../lib/coffee-stores';
 
-const StoreContext = createContext();
+export const StoreContext = createContext();
 
-const StoreProvider = ({children}) => {
+export const StoreProvider = ({children}) => {
 
-  const {latlong, handleTrackLocation} = useTrackLocation();
+  // const {latlong, handleTrackLocation} = useTrackLocation();
+  const [latlong, setLatlong] = useState('');
   const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
-  const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
 
-  useEffect(() => {
-    if(latlong){
-      const fetchLocalStores = async() => {
-        try{
-          const localCoffeeStoresData = await getCoffeeStores(latlong);
+  // useEffect(() => {
+  //   if(latlong){
+  //     const fetchLocalStores = async() => {
+  //       try{
+  //         const localCoffeeStoresData = await getCoffeeStores(latlong);
           
-          if(localCoffeeStoresData){
-            setLocalCoffeeStores(localCoffeeStoresData);
-            console.log(localCoffeeStoresData);
-          }
-        }catch(e){
-          setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
-        }
-      }
+  //         if(localCoffeeStoresData){
+  //           setLocalCoffeeStores(localCoffeeStoresData);
+  //           console.log(localCoffeeStoresData);
+  //         }
+  //       }catch(e){
+  //         setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
+  //       }
+  //     }
 
-      fetchLocalStores();
-    }
-  }, [latlong])
+  //     fetchLocalStores();
+  //   }
+  // }, [latlong])
 
 
   const value = {
     latlong,
-    handleTrackLocation,
+    setLatlong,
     localCoffeeStores,
-    localCoffeeStoresErrorMsg,
-
+    setLocalCoffeeStores,
   }
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>

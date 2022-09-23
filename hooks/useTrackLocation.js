@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { StoreContext } from '../pages/_app';
 import { getCoffeeStores } from '../lib/coffee-stores';
+
 
 const useTrackLocation = () => {
 
   const [locationErrorMsg, setLocationErrorMsg] = useState('');
-  const [latlong, setLatlong] = useState('');
+  const {setLatlong} = useContext(StoreContext);
   const [isFindingLocation, setIsFindingLocation] = useState(false);
 
   const success = (position) => {
@@ -30,7 +32,6 @@ const useTrackLocation = () => {
   }
 
   return {
-    latlong,
     handleTrackLocation,
     locationErrorMsg,
     isFindingLocation

@@ -4,7 +4,8 @@ import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
-import {useEffect, useState } from 'react'
+import {useEffect, useState, useContext } from 'react'
+import { StoreContext } from './_app'
 import { getCoffeeStores } from '../lib/coffee-stores'
 import useTrackLocation from '../hooks/useTrackLocation'
 
@@ -30,9 +31,10 @@ export async function getStaticProps(context) {
 export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
-  const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
+  const {localCoffeeStores, latlong, setLocalCoffeeStores} = useContext(StoreContext);
+  // const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
   const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
-  const {latlong, handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
+  const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
   console.log({latlong, locationErrorMsg});
 
@@ -57,13 +59,10 @@ export default function Home({coffeeStores}) {
 
   const bannerButtonHandler = async() => {
     handleTrackLocation();
-    // const localCoffeeStoresData = await getLocalCoffeeStores(latlong);
-    // if(localCoffeeStoresData){
-    //   setLocalCoffeeStores(localCoffeeStoresData);
-    //   console.log(localCoffeeStoresData);
-    // }
 
   }
+
+  console.log(localCoffeeStores);
 
   return (
     <div className={styles.container}>
@@ -77,7 +76,6 @@ export default function Home({coffeeStores}) {
         <Banner 
           toggleButton={toggleButton}
           setToggleButton={setToggleButton}
-          setLocalCoffeeStores={setLocalCoffeeStores}
           bannerButtonHandler={bannerButtonHandler}
           isFindingLocation={isFindingLocation}
         />
