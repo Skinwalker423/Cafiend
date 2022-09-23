@@ -4,16 +4,19 @@ import styles from '../styles/Home.module.css'
 import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
-import {useEffect, useState } from 'react'
+import {useEffect, useState, useContext } from 'react'
+import { StoreContext } from './_app'
 import { getCoffeeStores } from '../lib/coffee-stores'
 import useTrackLocation from '../hooks/useTrackLocation'
+import { ACTION_TYPES } from './_app'
 
 
 
 export async function getStaticProps(context) {
 
   console.log('get static props shows here')
-  const coffeeStoresApiData = await getCoffeeStores();
+  // const coffeeStoresApiData = await getCoffeeStores();
+  const coffeeStoresApiData = {}
 
   // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
   //   .then((res) => res.json())
@@ -29,38 +32,32 @@ export async function getStaticProps(context) {
 export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
-  const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
-  const {latlong, handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
+  const {state, dispatch} = useContext(StoreContext);
+  const {localCoffeeStores, latLong} = state;
+  const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
+  const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
-  console.log({latlong, locationErrorMsg});
 
   useEffect(() => {
-    if(latlong){
-
+    if(latLong){
       const fetchLocalStores = async() => {
         try{
-          const localCoffeeStoresData = await getCoffeeStores(latlong);
+          const localCoffeeStoresData = await getCoffeeStores(latLong);
           
           if(localCoffeeStoresData){
-            setLocalCoffeeStores(localCoffeeStoresData);
-            console.log(localCoffeeStoresData);
+            dispatch({type: ACTION_TYPES.SET_LOCAL_COFFEE_STORES, payload: localCoffeeStoresData});
           }
         }catch(e){
-          console.log('error fetching local stores:', e.message)
+          setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
         }
       }
 
       fetchLocalStores();
     }
-  }, [latlong])
+  }, [latLong])
 
   const bannerButtonHandler = async() => {
     handleTrackLocation();
-    // const localCoffeeStoresData = await getLocalCoffeeStores(latlong);
-    // if(localCoffeeStoresData){
-    //   setLocalCoffeeStores(localCoffeeStoresData);
-    //   console.log(localCoffeeStoresData);
-    // }
 
   }
 
@@ -76,7 +73,6 @@ export default function Home({coffeeStores}) {
         <Banner 
           toggleButton={toggleButton}
           setToggleButton={setToggleButton}
-          setLocalCoffeeStores={setLocalCoffeeStores}
           bannerButtonHandler={bannerButtonHandler}
           isFindingLocation={isFindingLocation}
         />
@@ -84,8 +80,9 @@ export default function Home({coffeeStores}) {
           <Image src={'/static/hero-image.png'} width={700} height={400} />
         </div>
         {locationErrorMsg && <h1>Something went wrong: {locationErrorMsg}</h1>}
+        {localCoffeeStoresErrorMsg && <h1>Something went wrong: {localCoffeeStoresErrorMsg}</h1>}
           <div>
-            {coffeeStores.length ? <div>
+            {/* {coffeeStores.length ? <div>
               <Header title='All Stores' />
               <div className={styles.listContainer}>
                 {coffeeStores.map(({name, fsq_id}) => {
@@ -100,7 +97,7 @@ export default function Home({coffeeStores}) {
                   )
                 })}
               </div>
-            </div> : 'Loading...'}
+            </div> : 'Loading...'} */}
           {localCoffeeStores && localCoffeeStores.length && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>

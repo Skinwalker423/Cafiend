@@ -1,24 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './index.module.css'
 import Head from 'next/head';
 import {AiOutlineHeart, AiFillHeart} from 'react-icons/ai';
-import {GoLocation, GoArrowLeft} from 'react-icons/go';
+import {GoLocation} from 'react-icons/go';
 import {TbLocation} from 'react-icons/tb';
 import {HiOutlineArrowLeft} from 'react-icons/hi'
 import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
+import { StoreContext } from '../_app';
 
 
 export async function getStaticProps({params}) {
 
-    const coffeeStoresData = await getCoffeeStores();
+    const {localCoffeeStores} = useContext(StoreContext);
+
+    console.log(localCoffeeStores);
+    // const coffeeStoresData = await getCoffeeStores();
+
+    // const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.fsq_id);
+    const findCoffeeStore = localCoffeeStores.find((store) => params.id === store.fsq_id);
 
     return{
       props: {
-        coffeeStore: coffeeStoresData.find((store) => params.id === store.fsq_id)
+        coffeeStore: findCoffeeStore ? findCoffeeStore : {}
       }
     }
 }
@@ -71,7 +78,7 @@ const CoffeeStorePage = ({coffeeStore}) => {
       <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
         <div className={styles.imageWrapper}>
-          <Image layout='fill' className={styles.image} src={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"} alt={name} />
+          <Image layout='fill' className={styles.image} src={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"} alt={name = 'coffee store'} />
         </div>
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>

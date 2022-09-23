@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
-import { getCoffeeStores } from '../lib/coffee-stores';
+import React, { useState, useContext } from 'react'
+import { StoreContext } from '../pages/_app';
+import { ACTION_TYPES } from '../pages/_app';
+
 
 const useTrackLocation = () => {
 
   const [locationErrorMsg, setLocationErrorMsg] = useState('');
-  const [latlong, setLatlong] = useState('');
+  const {dispatch} = useContext(StoreContext);
   const [isFindingLocation, setIsFindingLocation] = useState(false);
 
   const success = (position) => {
         const latitude  = position.coords.latitude;
         const longitude = position.coords.longitude;
-        setLatlong(`${latitude},${longitude}`);
+        dispatch({type: ACTION_TYPES.SET_LATLONG, payload: `${latitude},${longitude}`});
         setLocationErrorMsg('');
         setIsFindingLocation(false);
   }
@@ -30,7 +32,6 @@ const useTrackLocation = () => {
   }
 
   return {
-    latlong,
     handleTrackLocation,
     locationErrorMsg,
     isFindingLocation
