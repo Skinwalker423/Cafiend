@@ -13,7 +13,8 @@ import useTrackLocation from '../hooks/useTrackLocation'
 export async function getStaticProps(context) {
 
   console.log('get static props shows here')
-  const coffeeStoresApiData = await getCoffeeStores();
+  // const coffeeStoresApiData = await getCoffeeStores();
+  const coffeeStoresApiData = {}
 
   // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
   //   .then((res) => res.json())
@@ -30,13 +31,13 @@ export default function Home({coffeeStores}) {
 
   const [toggleButton, setToggleButton] = useState(false);
   const [localCoffeeStores, setLocalCoffeeStores] = useState([]);
+  const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
   const {latlong, handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
   console.log({latlong, locationErrorMsg});
 
   useEffect(() => {
     if(latlong){
-
       const fetchLocalStores = async() => {
         try{
           const localCoffeeStoresData = await getCoffeeStores(latlong);
@@ -46,7 +47,7 @@ export default function Home({coffeeStores}) {
             console.log(localCoffeeStoresData);
           }
         }catch(e){
-          console.log('error fetching local stores:', e.message)
+          setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
         }
       }
 
@@ -84,8 +85,9 @@ export default function Home({coffeeStores}) {
           <Image src={'/static/hero-image.png'} width={700} height={400} />
         </div>
         {locationErrorMsg && <h1>Something went wrong: {locationErrorMsg}</h1>}
+        {localCoffeeStoresErrorMsg && <h1>Something went wrong: {localCoffeeStoresErrorMsg}</h1>}
           <div>
-            {coffeeStores.length ? <div>
+            {/* {coffeeStores.length ? <div>
               <Header title='All Stores' />
               <div className={styles.listContainer}>
                 {coffeeStores.map(({name, fsq_id}) => {
@@ -100,7 +102,7 @@ export default function Home({coffeeStores}) {
                   )
                 })}
               </div>
-            </div> : 'Loading...'}
+            </div> : 'Loading...'} */}
           {localCoffeeStores && localCoffeeStores.length && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>

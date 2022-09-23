@@ -16,9 +16,11 @@ export async function getStaticProps({params}) {
 
     const coffeeStoresData = await getCoffeeStores();
 
+    const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.fsq_id);
+
     return{
       props: {
-        coffeeStore: coffeeStoresData.find((store) => params.id === store.fsq_id)
+        coffeeStore: findCoffeeStore ? findCoffeeStore : {}
       }
     }
 }
@@ -71,7 +73,7 @@ const CoffeeStorePage = ({coffeeStore}) => {
       <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
         <div className={styles.imageWrapper}>
-          <Image layout='fill' className={styles.image} src={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"} alt={name} />
+          <Image layout='fill' className={styles.image} src={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"} alt={name = 'coffee store'} />
         </div>
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
