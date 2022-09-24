@@ -5,7 +5,7 @@ import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
 import {useEffect, useState, useContext } from 'react'
-import { StoreContext, ACTION_TYPES } from './_app'
+import { StoreContext, ACTION_TYPES } from '../store/storeContext'
 import { getCoffeeStores } from '../lib/coffee-stores'
 import useTrackLocation from '../hooks/useTrackLocation'
 

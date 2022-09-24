@@ -10,7 +10,8 @@ import {TbLocation} from 'react-icons/tb';
 import {HiOutlineArrowLeft} from 'react-icons/hi'
 import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
-import { StoreContext } from '../_app';
+import { StoreContext } from '../../StoreContext/storeContext';
+import { isEmpty } from '../../utils';
 
 
 export async function getStaticProps({params}) {
@@ -59,10 +60,6 @@ const CoffeeStorePage = (initialProps) => {
       return <div>Loading...</div>
     }
 
-    const isEmpty = (stores) => {
-        return Object.keys(stores).length === 0;
-    }
-
 
     useEffect(() => {
         if(isEmpty(initialProps.coffeeStore)){
@@ -98,7 +95,7 @@ const CoffeeStorePage = (initialProps) => {
       <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
         <div className={styles.imageWrapper}>
-          <Image layout='fill' className={styles.image} src={'/static/hero-image.png'} alt={name || 'coffee store'} width={600} height={300} />
+          <Image layout='fill' className={styles.image} src={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"} alt={name || 'coffee store'} width={600} height={300} />
         </div>
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
