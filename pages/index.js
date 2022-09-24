@@ -5,10 +5,9 @@ import Image from 'next/image'
 import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
 import {useEffect, useState, useContext } from 'react'
-import { StoreContext } from './_app'
+import { StoreContext, ACTION_TYPES } from '../store/storeContext'
 import { getCoffeeStores } from '../lib/coffee-stores'
 import useTrackLocation from '../hooks/useTrackLocation'
-import { ACTION_TYPES } from './_app'
 
 
 
@@ -37,6 +36,8 @@ export default function Home({coffeeStores}) {
   const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
   const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
+  console.log(latLong);
+
 
   useEffect(() => {
     if(latLong){
@@ -44,9 +45,9 @@ export default function Home({coffeeStores}) {
         try{
           const localCoffeeStoresData = await getCoffeeStores(latLong);
           
-          if(localCoffeeStoresData){
-            dispatch({type: ACTION_TYPES.SET_LOCAL_COFFEE_STORES, payload: localCoffeeStoresData});
-          }
+          dispatch({type: ACTION_TYPES.SET_LOCAL_COFFEE_STORES, payload: localCoffeeStoresData});
+          console.log(localCoffeeStores);
+          
         }catch(e){
           setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
         }
