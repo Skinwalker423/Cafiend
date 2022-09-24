@@ -13,7 +13,6 @@ import useTrackLocation from '../hooks/useTrackLocation'
 
 export async function getStaticProps(context) {
 
-  console.log('get static props shows here')
   // const coffeeStoresApiData = await getCoffeeStores();
   const coffeeStoresApiData = {}
 
@@ -36,23 +35,22 @@ export default function Home({coffeeStores}) {
   const [localCoffeeStoresErrorMsg, setLocalCoffeeStoresErrorMsg] = useState(null);
   const {handleTrackLocation, locationErrorMsg, isFindingLocation} = useTrackLocation();
 
-  console.log(latLong);
 
 
   useEffect(() => {
     if(latLong){
       const fetchLocalStores = async() => {
         try{
-          const localCoffeeStoresData = await getCoffeeStores(latLong);
+          const res = await fetch(`/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=30`);
+          const localCoffeeStoresData = await res.json();
           
           dispatch({type: ACTION_TYPES.SET_LOCAL_COFFEE_STORES, payload: localCoffeeStoresData});
-          console.log(localCoffeeStores);
           
         }catch(e){
           setLocalCoffeeStoresErrorMsg('error fetching local stores:', e.message);
         }
       }
-
+      setLocalCoffeeStoresErrorMsg('');
       fetchLocalStores();
     }
   }, [latLong])
@@ -61,6 +59,8 @@ export default function Home({coffeeStores}) {
     handleTrackLocation();
 
   }
+
+  console.log(localCoffeeStores);
 
   return (
     <div className={styles.container}>

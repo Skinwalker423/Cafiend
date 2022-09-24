@@ -10,7 +10,7 @@ import {TbLocation} from 'react-icons/tb';
 import {HiOutlineArrowLeft} from 'react-icons/hi'
 import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
-import { StoreContext } from '../../StoreContext/storeContext';
+import { StoreContext } from '../../store/storeContext';
 import { isEmpty } from '../../utils';
 
 
@@ -69,12 +69,12 @@ const CoffeeStorePage = (initialProps) => {
             setCoffeeStore(findCoffeeStore)
           }
         }
-    }, [id, localCoffeeStores])
+    }, [id])
     
     console.log(coffeeStore);
 
 
-    const {name, location} = coffeeStore;
+    const {name, address, neighborhood, imageUrl, fsq_id} = coffeeStore;
 
 
 
@@ -99,8 +99,8 @@ const CoffeeStorePage = (initialProps) => {
         </div>
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
-            <p><span className={styles.icon}><GoLocation /></span>{location.address || 'placeholder'}</p>
-            <p><span className={styles.icon}><TbLocation /></span>{location.neighborhood || 'placeholder'}</p>
+            <p><span className={styles.icon}><GoLocation /></span>{address || 'placeholder'}</p>
+            <p><span className={styles.icon}><TbLocation /></span>{neighborhood || 'placeholder'}</p>
             {/* <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a> */}
             <p className={styles.likes}><span className={styles.icon}>{voted ? <AiFillHeart /> : <AiOutlineHeart />}</span>{likeCount}</p>
             <div className={styles.buttonWrapper}>
