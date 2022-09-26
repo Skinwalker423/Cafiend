@@ -16,15 +16,20 @@ const createCoffeeStore = async(req, res) => {
         }).firstPage();
         
         if(findStore){
-            console.log('Retrieved', findStore);
-            res.json(findStore)
+            const fields = findStore.map((field) => {
+                if(field.fields){
+                    return field.fields;
+                }
+            });
+            
+            res.json({id:fields[0].id, address: fields[0].address, neighborhood: fields[0].neighborhood, imageUrl: fields[0].imageUrl, votes: fields[0].votes });
         
         } else {
             res.json({message: 'not found. creating store'});
             await table.create([
                 {
                     "fields": {
-                        "I.d.": query.id,
+                        "id": query.id,
                         "name": query.name,
                         "address": query.address,
                         "neighborhood": query.neighborhood,
@@ -38,7 +43,7 @@ const createCoffeeStore = async(req, res) => {
     }
     }catch(err){
         console.log(err);
-        res.json({errorMsg: err})
+        res.status(500).res.json({errorMsg: err})
     }
 
     res.json({message: method})
