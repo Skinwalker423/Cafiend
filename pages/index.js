@@ -60,7 +60,6 @@ export default function Home({coffeeStores}) {
 
   }
 
-  console.log(localCoffeeStores);
 
   return (
     <div className={styles.container}>
