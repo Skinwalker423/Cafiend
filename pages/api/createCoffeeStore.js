@@ -25,33 +25,37 @@ const createCoffeeStore = async(req, res) => {
             res.json(fields[0]);
         
         } else {
-            try{
-            const createdRecord = await table.create([
-                {
-                    "fields": {
-                        id,
-                        name,
-                        address,
-                        neighborhood,
-                        votes,
-                        imageUrl,
+            if(id && name){
+                try{
+                const createdRecord = await table.create([
+                    {
+                        "fields": {
+                            id,
+                            name,
+                            address,
+                            neighborhood,
+                            votes,
+                            imageUrl,
+                        }
                     }
+                ]
+                )
+
+                if(createdRecord.length > 0){
+                const newRecord = createdRecord.map((field) => {
+                        return field.fields;
+                });
+
+                res.json(newRecord[0]);
+                
+                };
+
+
+                }catch(e){
+                    res.json({error: 'problem creating new record', e})
                 }
-            ]
-            )
-
-            if(createdRecord.length > 0){
-            const newRecord = createdRecord.map((field) => {
-                    return field.fields;
-            });
-
-            res.json(newRecord[0]);
-            
-            };
-
-
-            }catch(e){
-                res.json({error: 'problem creating new record', e})
+            } else {
+                res.status(400).json({message: 'id and name are missing'})
             }
         }
     }
