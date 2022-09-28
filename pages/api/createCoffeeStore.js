@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 const Airtable = require('airtable');
 const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE_ID);
 
@@ -6,13 +7,14 @@ const table = base('Coffee Stores');
 
 const createCoffeeStore = async(req, res) => {
 
-    const {method, query} = req;
+    const {method, body } = req;
+    const {id, name, address, neighborhood, votes, imageUrl} = body;
 
     try{
 
     if(method === 'POST'){
         const findStore = await table.select({
-            filterByFormula: `id="423"`
+            filterByFormula: `id=${id}`
         }).firstPage();
         
         if(findStore.length > 0){
@@ -27,12 +29,12 @@ const createCoffeeStore = async(req, res) => {
             const createdRecord = await table.create([
                 {
                     "fields": {
-                        id: query.id,
-                        name: query.name,
-                        address: query.address,
-                        neighborhood: query.neighborhood,
-                        votes: parseInt(query.votes),
-                        imageUrl: query.imageUrl,
+                        id,
+                        name,
+                        address,
+                        neighborhood,
+                        votes,
+                        imageUrl,
                     }
                 }
             ]
