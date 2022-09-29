@@ -76,6 +76,7 @@ const CoffeeStorePage = (initialProps) => {
         });
 
         const dbCoffeeStore = await cs.json();
+        console.log(dbCoffeeStore);
 
 
       }catch(err){
@@ -94,13 +95,14 @@ const CoffeeStorePage = (initialProps) => {
           if(localCoffeeStores.length > 0) {
             const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
             console.log(findCoffeeStore);
-
             if(findCoffeeStore) {
               handleCreateCoffeeStore(findCoffeeStore);
               setCoffeeStore(findCoffeeStore);
               console.log('setCoffeeStore was invoked');
             }
           }
+        } else {
+          handleCreateCoffeeStore(initialProps.coffeeStore);
         }
     }, [UrlId, coffeeStore, initialProps.coffeeStore])
     
