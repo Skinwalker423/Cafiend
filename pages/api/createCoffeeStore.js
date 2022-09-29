@@ -1,7 +1,7 @@
 const Airtable = require('airtable');
 const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE_ID);
 
-const table = base('Coffee Stores');
+export const table = base('Coffee Stores');
 
 
 const createCoffeeStore = async(req, res) => {
@@ -16,12 +16,14 @@ const createCoffeeStore = async(req, res) => {
             return res.status(400).json({message: 'no store id was found'})
         }
         const findStore = await table.select({
-            filterByFormula: `id=${id}`
+            filterByFormula: `id="${id}"`
         }).firstPage();
+
+        console.log('found the id and generating store from airtable')
         
         if(findStore.length > 0){
-            const fields = findStore.map((field) => {
-                    return field.fields;
+            const fields = findStore.map((record) => {
+                    return record.fields;
             });
             
             res.json(fields[0]);
@@ -50,6 +52,8 @@ const createCoffeeStore = async(req, res) => {
             const newRecord = createdRecord.map((record) => {
                     return record.fields;
             });
+
+            console.log('creating store for airtable');
 
             return res.json(newRecord[0]);
             

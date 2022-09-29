@@ -85,14 +85,14 @@ export default function Home({coffeeStores}) {
             {/* {coffeeStores.length ? <div>
               <Header title='All Stores' />
               <div className={styles.listContainer}>
-                {coffeeStores.map(({name, fsq_id}) => {
+                {coffeeStores.map(({name, id}) => {
 
                   return (
                     <CoffeeStoreCard 
                       title={name}
                       imageUrl={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"}
-                      href={`/coffee-store/${fsq_id}`}
-                      key={fsq_id}
+                      href={`/coffee-store/${id}`}
+                      key={id}
                     />
                   )
                 })}
@@ -101,13 +101,13 @@ export default function Home({coffeeStores}) {
           {localCoffeeStores && localCoffeeStores.length && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>
-            {localCoffeeStores.map(({fsq_id, name }) => {
+            {localCoffeeStores.map(({id, name }) => {
               return (
                 <CoffeeStoreCard 
                   title={name}
                   imageUrl={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"}
-                  href={`/coffee-store/${fsq_id}`}
-                  key={fsq_id}
+                  href={`/coffee-store/${id}`}
+                  key={id}
                 />
               )
             })}

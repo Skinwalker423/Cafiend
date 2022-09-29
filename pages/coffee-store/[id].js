@@ -18,7 +18,7 @@ export async function getStaticProps({params}) {
 
     const coffeeStoresData = await getCoffeeStores();
 
-    const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.fsq_id);
+    const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
     console.log('testing:', findCoffeeStore);
 
     return{
@@ -36,7 +36,7 @@ export async function getStaticPaths() {
   const coffeeStoresData = await getCoffeeStores();
 
   const pathId = coffeeStoresData.map((coffeeStore) => {
-    return {params: {id: coffeeStore.fsq_id}}
+    return {params: {id: coffeeStore.id}}
   })
 
   return{
@@ -48,12 +48,40 @@ export async function getStaticPaths() {
 const CoffeeStorePage = (initialProps) => {
 
     const router = useRouter()
-    const {id} = router.query;
+    const {UrlId} = router.query;
     const {state: {localCoffeeStores}} = useContext(StoreContext)
 
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
+
+    const handleCreateCoffeeStore = async(coffeeStore) => {
+      try{
+
+        const {id, name, address, neighborhood, imageUrl } = coffeeStore;
+
+        const cs = await fetch("/api/createCoffeeStore", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id,
+            name,
+            address: address || "",
+            neighborhood: neighborhood || "",
+            imageUrl,
+            votes: likeCount || 1,
+          })
+        });
+
+        const dbCoffeeStore = await cs.json();
+
+
+      }catch(err){
+        console.log('problem creating store in airtable')
+      }
+    }
 
 
     if(router.isFallback){
@@ -64,17 +92,22 @@ const CoffeeStorePage = (initialProps) => {
     useEffect(() => {
         if(isEmpty(initialProps.coffeeStore)){
           if(localCoffeeStores.length > 0) {
-            const findCoffeeStore = localCoffeeStores.find((store) => id == store.fsq_id);
+            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
             console.log(findCoffeeStore);
-            setCoffeeStore(findCoffeeStore)
+
+            if(findCoffeeStore) {
+              handleCreateCoffeeStore(findCoffeeStore);
+              setCoffeeStore(findCoffeeStore);
+              console.log('setCoffeeStore was invoked');
+            }
           }
         }
-    }, [id])
+    }, [UrlId, coffeeStore, initialProps.coffeeStore])
     
     console.log(coffeeStore);
 
 
-    const {name, address, neighborhood, imageUrl, fsq_id} = coffeeStore;
+    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
 
 
 
