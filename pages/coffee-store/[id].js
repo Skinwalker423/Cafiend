@@ -60,7 +60,7 @@ const CoffeeStorePage = (initialProps) => {
 
         const {id, name, address, neighborhood, imageUrl } = coffeeStore;
 
-        const cs = await fetch(`/api/createCoffeeStore/`, {
+        const cs = await fetch("/api/createCoffeeStore", {
           method: 'POST',
           headers: {
             "Content-Type": "application/json"
@@ -68,14 +68,14 @@ const CoffeeStorePage = (initialProps) => {
           body: JSON.stringify({
             id,
             name,
-            address,
-            neighborhood,
+            address: address || "",
+            neighborhood: neighborhood || "",
             imageUrl,
-            votes: 0,
+            votes: likeCount || 1,
           })
         });
 
-        return cs.json();
+        const dbCoffeeStore = await cs.json();
 
 
       }catch(err){
@@ -89,17 +89,20 @@ const CoffeeStorePage = (initialProps) => {
     }
 
 
-
-
     useEffect(() => {
         if(isEmpty(initialProps.coffeeStore)){
           if(localCoffeeStores.length > 0) {
-            const findCoffeeStore = localCoffeeStores.find((store) => UrlId == store.id);
+            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
             console.log(findCoffeeStore);
-            setCoffeeStore(findCoffeeStore)
+
+            if(findCoffeeStore) {
+              handleCreateCoffeeStore(findCoffeeStore);
+              setCoffeeStore(findCoffeeStore);
+              console.log('setCoffeeStore was invoked');
+            }
           }
         }
-    }, [UrlId])
+    }, [UrlId, coffeeStore, initialProps.coffeeStore])
     
     console.log(coffeeStore);
 
