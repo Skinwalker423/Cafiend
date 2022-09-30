@@ -106,16 +106,16 @@ const CoffeeStorePage = (initialProps) => {
         }
     }, [UrlId, coffeeStore, initialProps.coffeeStore])
     
-    console.log(coffeeStore);
 
 
     const {name, address, neighborhood, imageUrl, id} = coffeeStore;
 
 
-
-    const likeButtonHandler = () => {
+    const likeButtonHandler = async() => {
         setVoted((bool) => !bool);
-        setLikeCount((count) => count + 1);
+        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${id}`);
+        const latestVoteCount = await resonse.json();
+        setLikeCount(latestVoteCount);
     }
 
   return (
