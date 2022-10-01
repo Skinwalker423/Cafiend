@@ -1,4 +1,4 @@
-import { table } from "../../lib/airtable";
+import { table, findRecordByFilter, getMinifiedRecords } from "../../lib/airtable";
 
 
 const createCoffeeStore = async(req, res) => {
@@ -12,19 +12,13 @@ const createCoffeeStore = async(req, res) => {
         if(!id){
             return res.status(400).json({message: 'no store id was found'})
         }
-        const findStore = await table.select({
-            filterByFormula: `id="${id}"`
-        }).firstPage();
-
-        console.log('found the id and generating store from airtable')
+        
+        const findStore = findRecordByFilter(id);
         
         if(findStore.length > 0){
-            const fields = findStore.map((record) => {
-                    return record.fields;
-            });
-            
-            res.json(fields[0]);
-        
+            const fields = getMinifiedRecords(findStore);
+            res.json(fields);
+
         } else {
             if(!name){
                 return res.status(400).json({message: 'name is missing'})
@@ -46,14 +40,10 @@ const createCoffeeStore = async(req, res) => {
             )
 
             if(createdRecord.length > 0){
-            const newRecord = createdRecord.map((record) => {
-                    return record.fields;
-            });
+                const newRecord = getMinifiedRecord(createdRecord);
+                console.log('creating store for airtable');
 
-            console.log('creating store for airtable');
-
-            return res.json(newRecord[0]);
-            
+                return res.json(newRecord);
             };
 
 

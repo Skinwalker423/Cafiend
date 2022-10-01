@@ -8,7 +8,6 @@ const getCoffeeStoreVotes = async(req, res) => {
 
     try{
 
-    if(method === 'GET'){
         if(!id){
             return res.status(400).json({message: 'no store id was found'})
         }
@@ -45,9 +44,7 @@ const getCoffeeStoreVotes = async(req, res) => {
         } else {
             return res.status(400).json({message: 'no record found'})
         }
-    }
-
-           
+    
     }catch(err){
         console.log(err);
         return res.status(500).json({errorMsg: "Error finding a store", err})
