@@ -1,4 +1,4 @@
-import { table } from "../../lib/airtable";
+import { table, findRecordByFilter, getMinifiedRecords } from "../../lib/airtable";
 
 const getCoffeeStoreVotes = async(req, res) => {
 
@@ -8,21 +8,17 @@ const getCoffeeStoreVotes = async(req, res) => {
 
     try{
 
-    if(method === 'GET'){
         if(!id){
             return res.status(400).json({message: 'no store id was found'})
         }
 
-        const findStore = await table.select({
-            filterByFormula: `id="${id}"`
-        }).firstPage();
-
-        console.log('found the id and generating votes from airtable');
+        const fields = await findRecordByFilter(id);
+        console.log('this is find store', fields);
         
-        if(findStore.length > 0){
-            const fields = findStore.map((record) => {
-                    return record.fields;
-            });
+        if(fields.length > 0){
+
+            console.log('fields check', fields);
+            console.log('recid check',fields[0].RecordID);
 
             const votes = fields[0].votes + 1;
             const recId = fields[0].RecordID;
@@ -34,20 +30,20 @@ const getCoffeeStoreVotes = async(req, res) => {
             
             })
 
+            if(!updatedStore){
+                return res.status(400).json({message: 'problem updating the record'})
+            }
+            
             console.log('updating record:', updatedStore.fields.votes);
-
 
             const updatedVotes = updatedStore.fields.votes;
 
-            
             res.json(updatedVotes);
         
         } else {
             return res.status(400).json({message: 'no record found'})
         }
-    }
-
-           
+    
     }catch(err){
         console.log(err);
         return res.status(500).json({errorMsg: "Error finding a store", err})
