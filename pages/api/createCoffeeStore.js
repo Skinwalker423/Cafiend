@@ -13,11 +13,10 @@ const createCoffeeStore = async(req, res) => {
             return res.status(400).json({message: 'no store id was found'})
         }
         
-        const findStore = findRecordByFilter(id);
+        const findStore = await findRecordByFilter(id);
         
         if(findStore.length > 0){
-            const fields = getMinifiedRecords(findStore);
-            res.json(fields);
+            return res.json(findStore);
 
         } else {
             if(!name){
@@ -40,8 +39,8 @@ const createCoffeeStore = async(req, res) => {
             )
 
             if(createdRecord.length > 0){
-                const newRecord = getMinifiedRecord(createdRecord);
-                console.log('creating store for airtable');
+                const newRecord = getMinifiedRecords(createdRecord);
+                console.log('creating store for airtable', newRecord);
 
                 return res.json(newRecord);
             };

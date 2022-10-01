@@ -75,8 +75,7 @@ const CoffeeStorePage = (initialProps) => {
           })
         });
 
-        const dbCoffeeStore = await cs.json();
-        console.log(dbCoffeeStore);
+        return await cs.json();
 
 
       }catch(err){
