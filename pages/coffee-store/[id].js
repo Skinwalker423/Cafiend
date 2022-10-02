@@ -12,6 +12,8 @@ import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
 import { StoreContext } from '../../store/storeContext';
 import { isEmpty } from '../../utils';
+import useSWR from 'swr';
+import { fetcher } from '../../utils/fetcher';
 
 
 export async function getStaticProps({params}) {
@@ -19,7 +21,7 @@ export async function getStaticProps({params}) {
     const coffeeStoresData = await getCoffeeStores();
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
-    console.log('testing:', findCoffeeStore);
+    console.log('finding coffee store with params inside getStaticProps:', findCoffeeStore);
 
     return{
       props: {
@@ -48,19 +50,57 @@ export async function getStaticPaths() {
 const CoffeeStorePage = (initialProps) => {
 
     const router = useRouter()
-    const {UrlId} = router.query;
+    const UrlId = router.query.id;
     const {state: {localCoffeeStores}} = useContext(StoreContext)
 
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
+    const [recId, setRecId] = useState('');
+    const {name = "", address = "", neighborhood = "", imageUrl = ""} = coffeeStore;
+
+
+    const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
+
+
+    useEffect(() => {
+        if(isEmpty(initialProps.coffeeStore)){
+          if(localCoffeeStores.length > 0) {
+            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
+            
+            if(findCoffeeStore) {
+              console.log('found local coffee store. handle createCoffeeStore');
+              handleCreateCoffeeStore(findCoffeeStore);
+              setCoffeeStore(findCoffeeStore);
+              console.log('setCoffeeStore was invoked');
+            }
+          }
+        } else {
+          console.log('createCoffeeStore2 in useEffect');
+          setCoffeeStore(initialProps.coffeeStore);
+          handleCreateCoffeeStore(initialProps.coffeeStore);
+        }
+    }, [UrlId, coffeeStore, initialProps.coffeeStore])
+
+    useEffect(() => {
+      
+      if(data){
+        setCoffeeStore(data);
+        console.log('data from SWR', data);
+        setLikeCount(data.votes);
+        setRecId(data.RecordID);
+        console.log('use effect RecordID', data.RecordID);
+      }
+
+    }, [data])
+
 
     const handleCreateCoffeeStore = async(coffeeStore) => {
       try{
 
         const {id, name, address, neighborhood, imageUrl } = coffeeStore;
 
-        const cs = await fetch("/api/createCoffeeStore", {
+        const newCoffeeStore = await fetch("/api/createCoffeeStore", {
           method: 'POST',
           headers: {
             "Content-Type": "application/json"
@@ -75,7 +115,7 @@ const CoffeeStorePage = (initialProps) => {
           })
         });
 
-        return await cs.json();
+        return await newCoffeeStore.json();
 
 
       }catch(err){
@@ -83,39 +123,23 @@ const CoffeeStorePage = (initialProps) => {
       }
     }
 
+    const likeButtonHandler = async() => {
+        setVoted((bool) => !bool);
+        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${UrlId}&recId=${recId}&votes=${likeCount}`);
+        const latestVoteCount = await resonse.json();
+        setLikeCount(latestVoteCount);
+    }
+
+    if(error){
+      return <div>Something went wrong retrieving coffee store page</div>
+    }
 
     if(router.isFallback){
       return <div>Loading...</div>
     }
 
 
-    useEffect(() => {
-        if(isEmpty(initialProps.coffeeStore)){
-          if(localCoffeeStores.length > 0) {
-            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
-            console.log(findCoffeeStore);
-            if(findCoffeeStore) {
-              handleCreateCoffeeStore(findCoffeeStore);
-              setCoffeeStore(findCoffeeStore);
-              console.log('setCoffeeStore was invoked');
-            }
-          }
-        } else {
-          handleCreateCoffeeStore(initialProps.coffeeStore);
-        }
-    }, [UrlId, coffeeStore, initialProps.coffeeStore])
-    
 
-
-    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
-
-
-    const likeButtonHandler = async() => {
-        setVoted((bool) => !bool);
-        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${id}`);
-        const latestVoteCount = await resonse.json();
-        setLikeCount(latestVoteCount);
-    }
 
   return (
     <div className={styles.container}>
