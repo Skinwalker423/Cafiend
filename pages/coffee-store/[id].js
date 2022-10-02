@@ -12,6 +12,8 @@ import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
 import { StoreContext } from '../../store/storeContext';
 import { isEmpty } from '../../utils';
+import useSWR from 'swr';
+import { fetcher } from '../../utils/fetcher';
 
 
 export async function getStaticProps({params}) {
@@ -48,46 +50,25 @@ export async function getStaticPaths() {
 const CoffeeStorePage = (initialProps) => {
 
     const router = useRouter()
-    const {UrlId} = router.query;
+    const UrlId = router.query.id;
     const {state: {localCoffeeStores}} = useContext(StoreContext)
 
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
-
-    const handleCreateCoffeeStore = async(coffeeStore) => {
-      try{
-
-        const {id, name, address, neighborhood, imageUrl } = coffeeStore;
-
-        const cs = await fetch("/api/createCoffeeStore", {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id,
-            name,
-            address: address || "",
-            neighborhood: neighborhood || "",
-            imageUrl,
-            votes: likeCount || 1,
-          })
-        });
-
-        return await cs.json();
+    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
 
 
-      }catch(err){
-        console.log('problem creating store in airtable')
+    const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
+
+
+    useEffect(() => {
+      if(data){
+        setCoffeeStore(data);
+        console.log('data from SWR', data)
       }
-    }
 
-
-    if(router.isFallback){
-      return <div>Loading...</div>
-    }
-
+    }, [data])
 
     useEffect(() => {
         if(isEmpty(initialProps.coffeeStore)){
@@ -104,11 +85,35 @@ const CoffeeStorePage = (initialProps) => {
           handleCreateCoffeeStore(initialProps.coffeeStore);
         }
     }, [UrlId, coffeeStore, initialProps.coffeeStore])
-    
 
 
-    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
+    const handleCreateCoffeeStore = async(coffeeStore) => {
+      try{
 
+        const {id, name, address, neighborhood, imageUrl } = coffeeStore;
+
+        const newCoffeeStore = await fetch("/api/createCoffeeStore", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id,
+            name,
+            address: address || "",
+            neighborhood: neighborhood || "",
+            imageUrl,
+            votes: likeCount || 1,
+          })
+        });
+
+        return await newCoffeeStore.json();
+
+
+      }catch(err){
+        console.log('problem creating store in airtable')
+      }
+    }
 
     const likeButtonHandler = async() => {
         setVoted((bool) => !bool);
@@ -116,6 +121,17 @@ const CoffeeStorePage = (initialProps) => {
         const latestVoteCount = await resonse.json();
         setLikeCount(latestVoteCount);
     }
+
+    if(error){
+      return <div>Something went wrong retrieving coffee store page</div>
+    }
+
+    if(router.isFallback){
+      return <div>Loading...</div>
+    }
+
+
+
 
   return (
     <div className={styles.container}>
