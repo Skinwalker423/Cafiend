@@ -15,7 +15,7 @@ const createCoffeeStore = async(req, res) => {
         
         const findStore = await findRecordByFilter(id);
         
-        if(findStore.length > 0){
+        if(findStore.length !== 0){
             return res.json(findStore);
 
         } else {

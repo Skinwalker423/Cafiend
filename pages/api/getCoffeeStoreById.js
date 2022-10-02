@@ -13,7 +13,6 @@ const getCoffeeStoreById = async(req, res) => {
         }
 
         const fields = await findRecordByFilter(id);
-        console.log('this is find store', fields);
         
         if(fields.length > 0){
 

@@ -21,7 +21,7 @@ export async function getStaticProps({params}) {
     const coffeeStoresData = await getCoffeeStores();
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
-    console.log('testing:', findCoffeeStore);
+    console.log('finding coffee store with params inside getStaticProps:', findCoffeeStore);
 
     return{
       props: {
@@ -56,35 +56,43 @@ const CoffeeStorePage = (initialProps) => {
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
-    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
+    const [recId, setRecId] = useState('');
+    const {name = "", address = "", neighborhood = "", imageUrl = ""} = coffeeStore;
 
 
     const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
 
 
     useEffect(() => {
-      if(data){
-        setCoffeeStore(data);
-        console.log('data from SWR', data)
-      }
-
-    }, [data])
-
-    useEffect(() => {
         if(isEmpty(initialProps.coffeeStore)){
           if(localCoffeeStores.length > 0) {
             const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
-            console.log(findCoffeeStore);
+            
             if(findCoffeeStore) {
+              console.log('found local coffee store. handle createCoffeeStore');
               handleCreateCoffeeStore(findCoffeeStore);
               setCoffeeStore(findCoffeeStore);
               console.log('setCoffeeStore was invoked');
             }
           }
         } else {
+          console.log('createCoffeeStore2 in useEffect');
+          setCoffeeStore(initialProps.coffeeStore);
           handleCreateCoffeeStore(initialProps.coffeeStore);
         }
     }, [UrlId, coffeeStore, initialProps.coffeeStore])
+
+    useEffect(() => {
+      
+      if(data){
+        setCoffeeStore(data);
+        console.log('data from SWR', data);
+        setLikeCount(data.votes);
+        setRecId(data.RecordID);
+        console.log('use effect RecordID', data.RecordID);
+      }
+
+    }, [data])
 
 
     const handleCreateCoffeeStore = async(coffeeStore) => {
@@ -117,7 +125,7 @@ const CoffeeStorePage = (initialProps) => {
 
     const likeButtonHandler = async() => {
         setVoted((bool) => !bool);
-        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${id}`);
+        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${UrlId}&recId=${recId}&votes=${likeCount}`);
         const latestVoteCount = await resonse.json();
         setLikeCount(latestVoteCount);
     }

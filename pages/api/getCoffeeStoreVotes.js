@@ -3,46 +3,42 @@ import { table, findRecordByFilter, getMinifiedRecords } from "../../lib/airtabl
 const getCoffeeStoreVotes = async(req, res) => {
 
     const {method, query } = req;
-    const {id} = query;
+    const {id, recId, votes} = query;
     console.log("checking Id:", id);
 
     try{
 
-        if(!id){
-            return res.status(400).json({message: 'no store id was found'})
+        if(!id && !recId){
+            return res.status(400).json({message: 'no store id and recId were found'})
         }
 
-        const fields = await findRecordByFilter(id);
-        console.log('this is find store', fields);
+        // const fields = await findRecordByFilter(id);
+        // console.log('this is find store', fields);
         
-        if(fields.length > 0){
+        // if(fields.length > 0){
 
-            console.log('fields check', fields);
-            console.log('recid check',fields[0].RecordID);
+        //     console.log('fields check', fields);
+        //     console.log('recid check',fields[0].RecordID);
 
-            const votes = fields[0].votes + 1;
-            const recId = fields[0].RecordID;
+        //     const votes = fields[0].votes + 1;
+        //     const recId = fields[0].RecordID;
 
-            console.log('mapping for recId:', recId);
+        console.log('recId:', recId);
 
-            const updatedStore = await table.update(recId, {
-                "votes": votes,
-            
-            })
-
-            if(!updatedStore){
-                return res.status(400).json({message: 'problem updating the record'})
-            }
-            
-            console.log('updating record:', updatedStore.fields.votes);
-
-            const updatedVotes = updatedStore.fields.votes;
-
-            res.json(updatedVotes);
+        const updatedStore = await table.update(recId, {
+            "votes": parseInt(votes) + 1,
         
-        } else {
-            return res.status(400).json({message: 'no record found'})
+        })
+
+        if(!updatedStore){
+            return res.status(400).json({message: 'problem updating the record'})
         }
+        
+        console.log('updating record:', updatedStore.fields.votes);
+
+        const updatedVotes = updatedStore.fields.votes;
+
+        res.json(updatedVotes);
     
     }catch(err){
         console.log(err);
