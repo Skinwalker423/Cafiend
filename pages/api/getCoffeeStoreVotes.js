@@ -4,7 +4,6 @@ const getCoffeeStoreVotes = async(req, res) => {
 
     const {method} = req;
     const {id} = req.body;
-    console.log("checking Id's:", id);
 
     try{
         if(method === 'PUT'){
@@ -24,15 +23,12 @@ const getCoffeeStoreVotes = async(req, res) => {
             if(!updatedStore){
                 return res.status(400).json({message: 'problem updating the record'})
             }
-            
-            console.log('updating record:', updatedStore.fields.votes);
-
+        
             const updatedVotes = updatedStore.fields.votes;
 
             return res.json(updatedVotes);
         }
     }catch(err){
-        console.log(err);
         return res.status(500).json({errorMsg: "Error finding a store", err})
     }
 

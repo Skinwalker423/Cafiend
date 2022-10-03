@@ -16,10 +16,6 @@ export async function getStaticProps(context) {
   // const coffeeStoresApiData = await getCoffeeStores();
   const coffeeStoresApiData = {}
 
-  // const coffeeStores = await fetch('https://jsonplaceholder.typicode.com/users')
-  //   .then((res) => res.json())
-  //   .catch((e) => console.log(e))
-
   return {
     props: {
       coffeeStores: coffeeStoresApiData

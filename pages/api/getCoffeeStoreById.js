@@ -4,7 +4,6 @@ const getCoffeeStoreById = async(req, res) => {
 
     const {method, query } = req;
     const {id} = query;
-    console.log("checking Id:", id);
 
     try{
 
@@ -16,9 +15,6 @@ const getCoffeeStoreById = async(req, res) => {
         
         if(fields.length > 0){
 
-            console.log('fields check', fields);
-            console.log('recid check',fields[0].RecordID);
-
             const votes = fields[0].votes + 1;
             const recId = fields[0].RecordID;
 
@@ -29,7 +25,6 @@ const getCoffeeStoreById = async(req, res) => {
         }
     
     }catch(err){
-        console.log(err);
         return res.status(500).json({errorMsg: "Error finding a store", err})
     }
 

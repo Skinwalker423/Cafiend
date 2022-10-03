@@ -21,7 +21,6 @@ export async function getStaticProps({params}) {
     const coffeeStoresData = await getCoffeeStores();
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
-    console.log('finding coffee store with params inside getStaticProps:', findCoffeeStore);
 
     return{
       props: {
@@ -68,14 +67,11 @@ const CoffeeStorePage = (initialProps) => {
             const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
             
             if(findCoffeeStore) {
-              console.log('found local coffee store. handle createCoffeeStore');
               handleCreateCoffeeStore(findCoffeeStore);
               setCoffeeStore(findCoffeeStore);
-              console.log('setCoffeeStore was invoked');
             }
           }
         } else {
-          console.log('createCoffeeStore2 in useEffect');
           setCoffeeStore(initialProps.coffeeStore);
           handleCreateCoffeeStore(initialProps.coffeeStore);
         }
@@ -85,10 +81,7 @@ const CoffeeStorePage = (initialProps) => {
       
       if(data){
         setCoffeeStore(data);
-        console.log('data from SWR', data);
         setLikeCount(data.votes);
-        setRecId(data.RecordID);
-        console.log('use effect RecordID', data.RecordID);
       }
 
     }, [data])
@@ -118,7 +111,7 @@ const CoffeeStorePage = (initialProps) => {
 
 
       }catch(err){
-        console.log('problem creating store in airtable')
+        console.error('problem creating store in airtable');
       }
     }
 
