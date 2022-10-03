@@ -125,7 +125,15 @@ const CoffeeStorePage = (initialProps) => {
 
     const likeButtonHandler = async() => {
         setVoted((bool) => !bool);
-        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${UrlId}&recId=${recId}&votes=${likeCount}`);
+        const resonse = await fetch("/api/getCoffeeStoreVotes", {
+          method: 'PUT',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: UrlId,
+          })
+        });
         const latestVoteCount = await resonse.json();
         setLikeCount(latestVoteCount);
     }
