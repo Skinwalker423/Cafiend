@@ -40,8 +40,6 @@ const createCoffeeStore = async(req, res) => {
 
             if(createdRecord.length > 0){
                 const newRecord = getMinifiedRecords(createdRecord);
-                console.log('creating store for airtable', newRecord);
-
                 return res.json(newRecord);
             };
 
@@ -52,7 +50,6 @@ const createCoffeeStore = async(req, res) => {
         }
     }
     }catch(err){
-        console.log(err);
         return res.status(500).json({errorMsg: "Error finding a store", err})
     }
 

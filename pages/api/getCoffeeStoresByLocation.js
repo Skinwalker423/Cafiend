@@ -4,7 +4,6 @@ const getCoffeeStoresByLocation = async(req, res) => {
 
     try{
         const {latLong, limit} = req.query;
-        console.log(limit, latLong);
 
         const localCoffeeStores = await getCoffeeStores(latLong, limit);
         res.status(200);

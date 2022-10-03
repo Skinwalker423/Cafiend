@@ -21,7 +21,6 @@ export async function getStaticProps({params}) {
     const coffeeStoresData = await getCoffeeStores();
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
-    console.log('finding coffee store with params inside getStaticProps:', findCoffeeStore);
 
     return{
       props: {
@@ -56,7 +55,6 @@ const CoffeeStorePage = (initialProps) => {
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
-    const [recId, setRecId] = useState('');
     const {name = "", address = "", neighborhood = "", imageUrl = ""} = coffeeStore;
 
 
@@ -69,14 +67,11 @@ const CoffeeStorePage = (initialProps) => {
             const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
             
             if(findCoffeeStore) {
-              console.log('found local coffee store. handle createCoffeeStore');
               handleCreateCoffeeStore(findCoffeeStore);
               setCoffeeStore(findCoffeeStore);
-              console.log('setCoffeeStore was invoked');
             }
           }
         } else {
-          console.log('createCoffeeStore2 in useEffect');
           setCoffeeStore(initialProps.coffeeStore);
           handleCreateCoffeeStore(initialProps.coffeeStore);
         }
@@ -86,10 +81,7 @@ const CoffeeStorePage = (initialProps) => {
       
       if(data){
         setCoffeeStore(data);
-        console.log('data from SWR', data);
         setLikeCount(data.votes);
-        setRecId(data.RecordID);
-        console.log('use effect RecordID', data.RecordID);
       }
 
     }, [data])
@@ -119,15 +111,34 @@ const CoffeeStorePage = (initialProps) => {
 
 
       }catch(err){
-        console.log('problem creating store in airtable')
+        console.error('problem creating store in airtable');
       }
     }
 
     const likeButtonHandler = async() => {
+      try{
         setVoted((bool) => !bool);
-        const resonse = await fetch(`/api/getCoffeeStoreVotes/?id=${UrlId}&recId=${recId}&votes=${likeCount}`);
+        const resonse = await fetch("/api/getCoffeeStoreVotes", {
+          method: 'PUT',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: UrlId,
+          })
+        });
+
         const latestVoteCount = await resonse.json();
+
+        if(!latestVoteCount){
+          setLikeCount(likeCount)
+        } 
+  
         setLikeCount(latestVoteCount);
+
+      }catch(err){
+        console.error("problem getting vote data", err.message)
+      }
     }
 
     if(error){
