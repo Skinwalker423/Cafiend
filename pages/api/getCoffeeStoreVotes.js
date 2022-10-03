@@ -2,7 +2,7 @@ import { table, findRecordByFilter } from "../../lib/airtable";
 
 const getCoffeeStoreVotes = async(req, res) => {
 
-    const {method, query } = req;
+    const {method} = req;
     const {id} = req.body;
     console.log("checking Id's:", id);
 
@@ -13,13 +13,9 @@ const getCoffeeStoreVotes = async(req, res) => {
             }
 
             const fields = await findRecordByFilter(id);
-            
-            console.log('fields check', fields);
-            console.log('recid check',fields[0].RecordID);
 
             const votes = fields[0].votes + 1;
             const recId = fields[0].RecordID;
-
 
             const updatedStore = await table.update(recId, {
                 "votes": votes,

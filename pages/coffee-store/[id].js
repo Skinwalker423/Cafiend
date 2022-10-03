@@ -56,7 +56,6 @@ const CoffeeStorePage = (initialProps) => {
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
-    const [recId, setRecId] = useState('');
     const {name = "", address = "", neighborhood = "", imageUrl = ""} = coffeeStore;
 
 
@@ -124,6 +123,7 @@ const CoffeeStorePage = (initialProps) => {
     }
 
     const likeButtonHandler = async() => {
+      try{
         setVoted((bool) => !bool);
         const resonse = await fetch("/api/getCoffeeStoreVotes", {
           method: 'PUT',
@@ -134,8 +134,18 @@ const CoffeeStorePage = (initialProps) => {
             id: UrlId,
           })
         });
+
         const latestVoteCount = await resonse.json();
+
+        if(!latestVoteCount){
+          setLikeCount(likeCount)
+        } 
+  
         setLikeCount(latestVoteCount);
+
+      }catch(err){
+        console.error("problem getting vote data", err.message)
+      }
     }
 
     if(error){
