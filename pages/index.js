@@ -13,8 +13,8 @@ import useTrackLocation from '../hooks/useTrackLocation'
 
 export async function getStaticProps(context) {
 
-  // const coffeeStoresApiData = await getCoffeeStores();
-  const coffeeStoresApiData = {}
+  const response = await getCoffeeStores("43.653833032607096%2C-79.37896808855945", 'ice cream');
+  const coffeeStoresApiData = response || {};
 
   return {
     props: {
@@ -60,8 +60,8 @@ export default function Home({coffeeStores}) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>CAFIEND CONNOISSEUR</title>
-        <meta content='Locate your favorite nearby coffee shops' />
+        <title>ICE CREAM DREAMS</title>
+        <meta content='Locate your favorite nearby Ice Cream Stores' />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -78,8 +78,8 @@ export default function Home({coffeeStores}) {
         {locationErrorMsg && <h1>Something went wrong: {locationErrorMsg}</h1>}
         {localCoffeeStoresErrorMsg && <h1>Something went wrong: {localCoffeeStoresErrorMsg}</h1>}
           <div>
-            {/* {coffeeStores.length ? <div>
-              <Header title='All Stores' />
+            {coffeeStores.length ? <div>
+              <Header title='Toranto Stores' />
               <div className={styles.listContainer}>
                 {coffeeStores.map(({name, id}) => {
 
@@ -93,7 +93,7 @@ export default function Home({coffeeStores}) {
                   )
                 })}
               </div>
-            </div> : 'Loading...'} */}
+            </div> : 'Loading...'}
           {localCoffeeStores && localCoffeeStores.length && <div className={styles.localStoresContainer}>
             <Header title='Local Stores' />
             <div className={styles.listContainer}>

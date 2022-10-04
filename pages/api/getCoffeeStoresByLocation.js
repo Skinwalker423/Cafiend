@@ -5,7 +5,7 @@ const getCoffeeStoresByLocation = async(req, res) => {
     try{
         const {latLong, limit} = req.query;
 
-        const localCoffeeStores = await getCoffeeStores(latLong, limit);
+        const localCoffeeStores = await getCoffeeStores(latLong, 'ice cream', limit);
         res.status(200);
         res.json(localCoffeeStores);
 
