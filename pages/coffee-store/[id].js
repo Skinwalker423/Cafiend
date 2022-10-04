@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -18,7 +18,7 @@ import { fetcher } from '../../utils/fetcher';
 
 export async function getStaticProps({params}) {
 
-    const coffeeStoresData = await getCoffeeStores();
+    const coffeeStoresData = await getCoffeeStores("43.653833032607096%2C-79.37896808855945", 'ice cream');
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
 
@@ -34,7 +34,7 @@ export async function getStaticProps({params}) {
 
 export async function getStaticPaths() {
 
-  const coffeeStoresData = await getCoffeeStores();
+  const coffeeStoresData = await getCoffeeStores("43.653833032607096%2C-79.37896808855945", 'ice cream');
 
   const pathId = coffeeStoresData.map((coffeeStore) => {
     return {params: {id: coffeeStore.id}}
@@ -54,40 +54,10 @@ const CoffeeStorePage = (initialProps) => {
 
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
-    const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore);
-    const {name = "", address = "", neighborhood = "", imageUrl = ""} = coffeeStore;
+    const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore || {});
 
 
-    const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
-
-
-    useEffect(() => {
-        if(isEmpty(initialProps.coffeeStore)){
-          if(localCoffeeStores.length > 0) {
-            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
-            
-            if(findCoffeeStore) {
-              handleCreateCoffeeStore(findCoffeeStore);
-              setCoffeeStore(findCoffeeStore);
-            }
-          }
-        } else {
-          setCoffeeStore(initialProps.coffeeStore);
-          handleCreateCoffeeStore(initialProps.coffeeStore);
-        }
-    }, [UrlId, coffeeStore, initialProps.coffeeStore])
-
-    useEffect(() => {
-      
-      if(data){
-        setCoffeeStore(data);
-        setLikeCount(data.votes);
-      }
-
-    }, [data])
-
-
-    const handleCreateCoffeeStore = async(coffeeStore) => {
+    const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
       try{
 
         const {id, name, address, neighborhood, imageUrl } = coffeeStore;
@@ -105,15 +75,54 @@ const CoffeeStorePage = (initialProps) => {
             imageUrl,
             votes: likeCount || 1,
           })
-        });
+        }, [id]);
 
         return await newCoffeeStore.json();
 
 
       }catch(err){
-        console.error('problem creating store in airtable');
+        console.error('problem creating store in airtable', err);
       }
-    }
+    })
+
+
+    useEffect(() => {
+        if(isEmpty(initialProps.coffeeStore)){
+          if(localCoffeeStores.length > 0) {
+            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
+            
+            if(findCoffeeStore) {
+              setCoffeeStore(findCoffeeStore);
+              console.log('triggered create');
+              handleCreateCoffeeStore(findCoffeeStore);
+              
+            }
+          }
+        } else {
+      
+          if(initialProps.coffeeStore){
+            console.log('triggered create 2', initialProps.coffeeStore);
+            handleCreateCoffeeStore(initialProps.coffeeStore);
+          }
+        }
+    }, [UrlId, initialProps.coffeeStore, localCoffeeStores])
+
+    // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
+
+    // useEffect(() => {
+      
+    //   if(data){
+    //     setCoffeeStore(data);
+    //     setLikeCount(data.votes);
+    //   }
+
+    // }, [data])
+
+    
+    const {name, address, neighborhood, imageUrl} = coffeeStore;
+
+
+    
 
     const likeButtonHandler = async() => {
       try{
@@ -141,9 +150,9 @@ const CoffeeStorePage = (initialProps) => {
       }
     }
 
-    if(error){
-      return <div>Something went wrong retrieving coffee store page</div>
-    }
+    // if(error){
+    //   return <div>Something went wrong retrieving coffee store page</div>
+    // }
 
     if(router.isFallback){
       return <div>Loading...</div>
@@ -168,8 +177,8 @@ const CoffeeStorePage = (initialProps) => {
         </div>
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
-            <p><span className={styles.icon}><GoLocation /></span>{address || 'placeholder'}</p>
-            <p><span className={styles.icon}><TbLocation /></span>{neighborhood || 'placeholder'}</p>
+            <p><span className={styles.icon}><GoLocation /></span>{address}</p>
+            <p><span className={styles.icon}><TbLocation /></span>{neighborhood}</p>
             {/* <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a> */}
             <p className={styles.likes}><span className={styles.icon}>{voted ? <AiFillHeart /> : <AiOutlineHeart />}</span>{likeCount}</p>
             <div className={styles.buttonWrapper}>

@@ -37,7 +37,7 @@ const createCoffeeStore = async(req, res) => {
                 }
             ]
             )
-
+            
             if(createdRecord.length > 0){
                 const newRecord = getMinifiedRecords(createdRecord);
                 return res.json(newRecord);

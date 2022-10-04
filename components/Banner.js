@@ -17,10 +17,10 @@ const handleBannerButton = async() => {
   return (
     <div className={styles.container}>
         <h1 className={styles.title}>
-          <span className={styles.title1}>CAFIEND</span>
-          <span className={styles.title2}>CONNOISSEUR</span>
+          <span className={styles.title1}>ICE CREAM </span>
+          <span className={styles.title2}>DREAMS</span>
         </h1>
-        <p className={styles.subTitle}>Discover your local coffee shops!</p>
+        <p className={styles.subTitle}>Discover your local ice cream stores!</p>
         <div className={styles.buttonWrapper}>
           <button onClick={handleBannerButton} type='button' className={styles.button}>{isFindingLocation ? 'checking stores...' : 'View Stores nearby'}
           </button>
