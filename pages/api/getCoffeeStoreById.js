@@ -4,6 +4,7 @@ const getCoffeeStoreById = async(req, res) => {
 
     const {method, query } = req;
     const {id} = query;
+    console.log(id);
 
     try{
 
@@ -12,15 +13,14 @@ const getCoffeeStoreById = async(req, res) => {
         }
 
         const fields = await findRecordByFilter(id);
+        console.log('checking id and field', id, fields);
         
         if(fields.length > 0){
-
-            const votes = fields[0].votes + 1;
-            const recId = fields[0].RecordID;
 
             return res.json(fields[0]);
         
         } else {
+            console.log('checking field', fields);
             return res.status(400).json({message: 'no record found'})
         }
     

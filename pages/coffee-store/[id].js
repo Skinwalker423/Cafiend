@@ -12,8 +12,8 @@ import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
 import { StoreContext } from '../../store/storeContext';
 import { isEmpty } from '../../utils';
-import useSWR from 'swr';
-import { fetcher } from '../../utils/fetcher';
+import useStore from '../../hooks/useStore';
+
 
 
 export async function getStaticProps({params}) {
@@ -28,9 +28,6 @@ export async function getStaticProps({params}) {
       }
     }
 }
-
-
-
 
 export async function getStaticPaths() {
 
@@ -49,80 +46,82 @@ export async function getStaticPaths() {
 const CoffeeStorePage = (initialProps) => {
 
     const router = useRouter()
-    const UrlId = router.query.id;
     const {state: {localCoffeeStores}} = useContext(StoreContext)
-
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore || {});
+    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
+    const UrlId = router.query.id || id;
 
 
-    const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
-      try{
 
-        const {id, name, address, neighborhood, imageUrl } = coffeeStore;
+  const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
+    try{
 
-        const newCoffeeStore = await fetch("/api/createCoffeeStore", {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id,
-            name,
-            address: address || "",
-            neighborhood: neighborhood || "",
-            imageUrl,
-            votes: likeCount || 1,
-          })
-        }, [id]);
+      const {id, name, address, neighborhood, imageUrl } = coffeeStore;
 
-        return await newCoffeeStore.json();
+      const newCoffeeStore = await fetch("/api/createCoffeeStore", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id,
+          name,
+          address: address || "",
+          neighborhood: neighborhood || "",
+          imageUrl,
+          votes: likeCount || 1,
+        })
+      }, [id]);
+
+      return await newCoffeeStore.json();
 
 
-      }catch(err){
-        console.error('problem creating store in airtable', err);
+    }catch(err){
+      console.error('problem creating store in airtable', err);
+    }
+  })
+
+  // /api/getCoffeeStoreById?id=${UrlId}
+
+  // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId || id}`, fetcher);
+
+
+  useEffect(() => {
+      if(isEmpty(initialProps.coffeeStore)){
+        if(localCoffeeStores.length > 0) {
+          const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
+          
+          if(findCoffeeStore) {
+            setCoffeeStore(findCoffeeStore);
+            console.log('triggered create');
+            handleCreateCoffeeStore(findCoffeeStore);
+            
+          }
+        }
+      } else {
+        if(initialProps.coffeeStore){
+          console.log('triggered create 2', initialProps.coffeeStore);
+          handleCreateCoffeeStore(initialProps.coffeeStore);
+        }
       }
-    })
+  }, [UrlId, initialProps.coffeeStore, localCoffeeStores])
+
+    const {isLoading, isError, data} = useStore(UrlId);
 
 
     useEffect(() => {
-        if(isEmpty(initialProps.coffeeStore)){
-          if(localCoffeeStores.length > 0) {
-            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
-            
-            if(findCoffeeStore) {
-              setCoffeeStore(findCoffeeStore);
-              console.log('triggered create');
-              handleCreateCoffeeStore(findCoffeeStore);
-              
-            }
-          }
-        } else {
-      
-          if(initialProps.coffeeStore){
-            console.log('triggered create 2', initialProps.coffeeStore);
-            handleCreateCoffeeStore(initialProps.coffeeStore);
-          }
-        }
-    }, [UrlId, initialProps.coffeeStore, localCoffeeStores])
 
-    // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
-
-    // useEffect(() => {
-      
-    //   if(data){
-    //     setCoffeeStore(data);
-    //     setLikeCount(data.votes);
-    //   }
-
-    // }, [data])
-
+        if(data){
+        setCoffeeStore(data);
+        setLikeCount(data.votes);
+      }
     
-    const {name, address, neighborhood, imageUrl} = coffeeStore;
+
+    }, [data])
 
 
-    
 
     const likeButtonHandler = async() => {
       try{
@@ -150,11 +149,11 @@ const CoffeeStorePage = (initialProps) => {
       }
     }
 
-    // if(error){
-    //   return <div>Something went wrong retrieving coffee store page</div>
-    // }
+    if(isError){
+      return <div>Something went wrong retrieving coffee store page</div>
+    }
 
-    if(router.isFallback){
+    if(router.isFallback || isLoading){
       return <div>Loading...</div>
     }
 
