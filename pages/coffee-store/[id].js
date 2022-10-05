@@ -12,8 +12,8 @@ import cls from 'classnames';
 import { getCoffeeStores } from '../../lib/coffee-stores';
 import { StoreContext } from '../../store/storeContext';
 import { isEmpty } from '../../utils';
-import useSWR from 'swr';
-import { fetcher } from '../../utils/fetcher';
+import useStore from '../../hooks/useStore';
+
 
 
 export async function getStaticProps({params}) {
@@ -46,14 +46,13 @@ export async function getStaticPaths() {
 const CoffeeStorePage = (initialProps) => {
 
     const router = useRouter()
-    const UrlId = router.query.id;
     const {state: {localCoffeeStores}} = useContext(StoreContext)
-
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore || {});
     const {name, address, neighborhood, imageUrl, id} = coffeeStore;
-    const [urlId, setUrlId] = useState(UrlId || id);
+    const UrlId = router.query.id || id;
+
 
 
   const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
@@ -84,17 +83,15 @@ const CoffeeStorePage = (initialProps) => {
     }
   })
 
+  // /api/getCoffeeStoreById?id=${UrlId}
+
+  // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId || id}`, fetcher);
+
 
   useEffect(() => {
-    setUrlId(UrlId);
-
-    if(initialProps.coffeeStore){
-          console.log('triggered create 2', initialProps.coffeeStore);
-          handleCreateCoffeeStore(initialProps.coffeeStore);    
-    } else {
       if(isEmpty(initialProps.coffeeStore)){
         if(localCoffeeStores.length > 0) {
-          const findCoffeeStore = localCoffeeStores.find((store) => urlId === store.id);
+          const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
           
           if(findCoffeeStore) {
             setCoffeeStore(findCoffeeStore);
@@ -103,27 +100,27 @@ const CoffeeStorePage = (initialProps) => {
             
           }
         }
+      } else {
+        if(initialProps.coffeeStore){
+          console.log('triggered create 2', initialProps.coffeeStore);
+          handleCreateCoffeeStore(initialProps.coffeeStore);
+        }
       }
-  }
-  }, [urlId, initialProps.coffeeStore, localCoffeeStores])
+  }, [UrlId, initialProps.coffeeStore, localCoffeeStores])
 
+    const {isLoading, isError, data} = useStore(UrlId);
 
-    const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${urlId}`, fetcher);
-    console.log()
 
     useEffect(() => {
 
-      if(error){
-        console.error('swr erros', error)
-      } else{
         if(data){
         setCoffeeStore(data);
         setLikeCount(data.votes);
       }
-      }
     
 
     }, [data])
+
 
 
     const likeButtonHandler = async() => {
@@ -152,11 +149,11 @@ const CoffeeStorePage = (initialProps) => {
       }
     }
 
-    if(error){
+    if(isError){
       return <div>Something went wrong retrieving coffee store page</div>
     }
 
-    if(router.isFallback){
+    if(router.isFallback || isLoading){
       return <div>Loading...</div>
     }
 
