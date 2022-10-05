@@ -15,9 +15,6 @@ const getCoffeeStoreById = async(req, res) => {
         
         if(fields.length > 0){
 
-            const votes = fields[0].votes + 1;
-            const recId = fields[0].RecordID;
-
             return res.json(fields[0]);
         
         } else {

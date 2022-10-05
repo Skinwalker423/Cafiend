@@ -29,9 +29,6 @@ export async function getStaticProps({params}) {
     }
 }
 
-
-
-
 export async function getStaticPaths() {
 
   const coffeeStoresData = await getCoffeeStores("43.653833032607096%2C-79.37896808855945", 'ice cream');
@@ -55,74 +52,79 @@ const CoffeeStorePage = (initialProps) => {
     const [likeCount, setLikeCount] = useState(1);
     const [voted, setVoted] = useState(false);
     const [coffeeStore, setCoffeeStore] = useState(initialProps.coffeeStore || {});
+    const {name, address, neighborhood, imageUrl, id} = coffeeStore;
+    const [urlId, setUrlId] = useState(UrlId || id);
 
 
-    const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
-      try{
+  const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
+    try{
 
-        const {id, name, address, neighborhood, imageUrl } = coffeeStore;
+      const {id, name, address, neighborhood, imageUrl } = coffeeStore;
 
-        const newCoffeeStore = await fetch("/api/createCoffeeStore", {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id,
-            name,
-            address: address || "",
-            neighborhood: neighborhood || "",
-            imageUrl,
-            votes: likeCount || 1,
-          })
-        }, [id]);
+      const newCoffeeStore = await fetch("/api/createCoffeeStore", {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id,
+          name,
+          address: address || "",
+          neighborhood: neighborhood || "",
+          imageUrl,
+          votes: likeCount || 1,
+        })
+      }, [id]);
 
-        return await newCoffeeStore.json();
-
-
-      }catch(err){
-        console.error('problem creating store in airtable', err);
-      }
-    })
+      return await newCoffeeStore.json();
 
 
-    useEffect(() => {
-        if(isEmpty(initialProps.coffeeStore)){
-          if(localCoffeeStores.length > 0) {
-            const findCoffeeStore = localCoffeeStores.find((store) => UrlId === store.id);
+    }catch(err){
+      console.error('problem creating store in airtable', err);
+    }
+  })
+
+
+  useEffect(() => {
+    setUrlId(UrlId);
+
+    if(initialProps.coffeeStore){
+          console.log('triggered create 2', initialProps.coffeeStore);
+          handleCreateCoffeeStore(initialProps.coffeeStore);    
+    } else {
+      if(isEmpty(initialProps.coffeeStore)){
+        if(localCoffeeStores.length > 0) {
+          const findCoffeeStore = localCoffeeStores.find((store) => urlId === store.id);
+          
+          if(findCoffeeStore) {
+            setCoffeeStore(findCoffeeStore);
+            console.log('triggered create');
+            handleCreateCoffeeStore(findCoffeeStore);
             
-            if(findCoffeeStore) {
-              setCoffeeStore(findCoffeeStore);
-              console.log('triggered create');
-              handleCreateCoffeeStore(findCoffeeStore);
-              
-            }
-          }
-        } else {
-      
-          if(initialProps.coffeeStore){
-            console.log('triggered create 2', initialProps.coffeeStore);
-            handleCreateCoffeeStore(initialProps.coffeeStore);
           }
         }
-    }, [UrlId, initialProps.coffeeStore, localCoffeeStores])
+      }
+  }
+  }, [urlId, initialProps.coffeeStore, localCoffeeStores])
 
-    // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId}`, fetcher);
 
-    // useEffect(() => {
-      
-    //   if(data){
-    //     setCoffeeStore(data);
-    //     setLikeCount(data.votes);
-    //   }
+    const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${urlId}`, fetcher);
+    console.log()
 
-    // }, [data])
+    useEffect(() => {
 
+      if(error){
+        console.error('swr erros', error)
+      } else{
+        if(data){
+        setCoffeeStore(data);
+        setLikeCount(data.votes);
+      }
+      }
     
-    const {name, address, neighborhood, imageUrl} = coffeeStore;
 
+    }, [data])
 
-    
 
     const likeButtonHandler = async() => {
       try{
@@ -150,9 +152,9 @@ const CoffeeStorePage = (initialProps) => {
       }
     }
 
-    // if(error){
-    //   return <div>Something went wrong retrieving coffee store page</div>
-    // }
+    if(error){
+      return <div>Something went wrong retrieving coffee store page</div>
+    }
 
     if(router.isFallback){
       return <div>Loading...</div>
