@@ -9,19 +9,17 @@ const getCoffeeStoreById = async(req, res) => {
     try{
 
         if(!id){
-            return res.status(400).json({message: 'no store id was found'})
+            return res.status(400).json({message: 'id missing'})
         }
 
         const fields = await findRecordByFilter(id);
-        console.log('checking id and field', id, fields);
+        console.log('checking id and field in findRecordById', id, fields);
         
-        if(fields.length > 0){
-
+        if(fields.length !== 0){
             return res.json(fields[0]);
-        
         } else {
-            console.log('checking field', fields);
-            return res.status(400).json({message: 'no record found'})
+            console.log('checking fields since no field.length', fields);
+            return res.json({message: 'no record in findRecordByFilter'})
         }
     
     }catch(err){
