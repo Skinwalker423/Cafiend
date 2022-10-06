@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+[icd](https://user-images.githubusercontent.com/85347852/194211740-426ee927-97cb-40b5-b4c5-018396c2b1ec.PNG)
+
+https://ice-cream-dreams.vercel.app/
+
 ## Getting Started
 
 First, run the development server:
@@ -29,7 +33,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-![icd](https://user-images.githubusercontent.com/85347852/194211740-426ee927-97cb-40b5-b4c5-018396c2b1ec.PNG)
 
-https://ice-cream-dreams.vercel.app/
 
