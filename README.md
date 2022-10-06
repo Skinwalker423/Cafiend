@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-[icd](https://user-images.githubusercontent.com/85347852/194211740-426ee927-97cb-40b5-b4c5-018396c2b1ec.PNG)
+![icd](https://user-images.githubusercontent.com/85347852/194211740-426ee927-97cb-40b5-b4c5-018396c2b1ec.PNG)
 
 https://ice-cream-dreams.vercel.app/
 
