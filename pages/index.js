@@ -6,24 +6,13 @@ import CoffeeStoreCard from '../components/CoffeeStoreCard'
 import Header from '../components/Header'
 import {useEffect, useState, useContext } from 'react'
 import { StoreContext, ACTION_TYPES } from '../store/storeContext'
-import { getCoffeeStores } from '../lib/coffee-stores'
+
 import useTrackLocation from '../hooks/useTrackLocation'
 
 
 
-export async function getStaticProps(context) {
 
-  // const response = await getCoffeeStores();
-  const coffeeStoresApiData = {};
-
-  return {
-    props: {
-      coffeeStores: coffeeStoresApiData
-    }, // will be passed to the page component as props
-  }
-}
-
-export default function Home({coffeeStores}) {
+export default function Home() {
 
   const [toggleButton, setToggleButton] = useState(false);
   const {state, dispatch} = useContext(StoreContext);
@@ -49,7 +38,7 @@ export default function Home({coffeeStores}) {
       setLocalCoffeeStoresErrorMsg('');
       fetchLocalStores();
     }
-  }, [latLong])
+  }, [latLong, dispatch])
 
   const bannerButtonHandler = async() => {
     handleTrackLocation();
@@ -73,7 +62,7 @@ export default function Home({coffeeStores}) {
           isFindingLocation={isFindingLocation}
         />
         <div className={styles.heroImage}>
-          <Image src={'/static/hero-image.png'} width={700} height={400} />
+          <Image src={'/static/hero-image.png'} width={700} height={400} alt='hero image' />
         </div>
         {locationErrorMsg && <h1>Something went wrong: {locationErrorMsg}</h1>}
         {localCoffeeStoresErrorMsg && <h1>Something went wrong: {localCoffeeStoresErrorMsg}</h1>}

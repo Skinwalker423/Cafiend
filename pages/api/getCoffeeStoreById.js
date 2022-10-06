@@ -13,12 +13,10 @@ const getCoffeeStoreById = async(req, res) => {
         }
 
         const fields = await findRecordByFilter(id);
-        console.log('checking id and field in findRecordById', id, fields);
         
         if(fields.length !== 0){
             return res.json(fields[0]);
         } else {
-            console.log('checking fields since no field.length', fields);
             return res.json({message: 'no record in findRecordByFilter'})
         }
     

@@ -14,7 +14,7 @@ const CoffeeStoreCard = ({title, imageUrl, href}) => {
                 <h2 className={styles.cardHeader}>{title}</h2>
               </div>
               <div className={styles.imgWrapper}>
-                <Image className={styles.image} src={imageUrl} width={260} height={160} />
+                <Image className={styles.image} src={imageUrl} width={260} height={160} alt='ice cream image' />
               </div>
             </div>
           </a>

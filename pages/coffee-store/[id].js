@@ -18,13 +18,9 @@ import useStore from '../../hooks/useStore';
 
 export async function getStaticProps({params}) {
 
-    console.log(params.id);
-
     const coffeeStoresData = await getCoffeeStores();
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
-
-    console.log('get static props found store', findCoffeeStore)
 
     return{
       props: {
@@ -36,7 +32,6 @@ export async function getStaticProps({params}) {
 export async function getStaticPaths() {
 
   const coffeeStoresData = await getCoffeeStores();
-  console.log('get static paths found store')
 
   const pathId = coffeeStoresData.map((coffeeStore) => {
     return {params: {id: coffeeStore.id}}
@@ -60,7 +55,7 @@ const CoffeeStorePage = (initialProps) => {
 
 
 
-  const handleCreateCoffeeStore = async(coffeeStore) => {
+  const handleCreateCoffeeStore = useCallback(async(coffeeStore) => {
     try{
 
       const {id, name, address, neighborhood, imageUrl } = coffeeStore;
@@ -78,7 +73,7 @@ const CoffeeStorePage = (initialProps) => {
           imageUrl,
           votes: likeCount || 1,
         })
-      }, [coffeeStore]);
+      }, [coffeeStore, likeCount]);
 
       return await newCoffeeStore.json();
 
@@ -86,11 +81,7 @@ const CoffeeStorePage = (initialProps) => {
     }catch(err){
       console.error('problem creating store in airtable', err);
     }
-  }
-
-  // /api/getCoffeeStoreById?id=${UrlId}
-
-  // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId || id}`, fetcher);
+  }, [coffeeStore])
 
 
   useEffect(() => {
@@ -100,20 +91,17 @@ const CoffeeStorePage = (initialProps) => {
           
           if(findCoffeeStore) {
             setCoffeeStore(findCoffeeStore);
-            console.log('triggered create');
             handleCreateCoffeeStore(findCoffeeStore);
             
           }
         }
       } else {
         if(initialProps.coffeeStore){
-          console.log('triggered create 2');
           handleCreateCoffeeStore(initialProps.coffeeStore);
           setCoffeeStore(initialProps.coffeeStore);
-          console.log('like count', likeCount);
         }
       }
-  }, [UrlId, initialProps.coffeeStore, coffeeStore])
+  }, [UrlId, initialProps.coffeeStore, coffeeStore, localCoffeeStores, handleCreateCoffeeStore])
 
 
     const {isLoading, isError, data} = useStore(UrlId);
