@@ -9,7 +9,7 @@ const CoffeeStore = ({id, basePath, title}) => {
         <Link href={`${basePath}/${id}`}>
             <div className={styles.coffeeStoreCardContainer}>
                 <h2>{title}</h2>
-                <Image src={'/favicon.ico'} width={50} height={50} />
+                <Image src={'/favicon.ico'} width={50} height={50} alt='ice cream image' />
                 <button> more info</button>
             </div>
         </Link>

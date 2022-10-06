@@ -18,7 +18,7 @@ import useStore from '../../hooks/useStore';
 
 export async function getStaticProps({params}) {
 
-    const coffeeStoresData = await getCoffeeStores("43.653833032607096%2C-79.37896808855945", 'ice cream');
+    const coffeeStoresData = await getCoffeeStores();
 
     const findCoffeeStore = coffeeStoresData.find((store) => params.id === store.id);
 
@@ -31,7 +31,7 @@ export async function getStaticProps({params}) {
 
 export async function getStaticPaths() {
 
-  const coffeeStoresData = await getCoffeeStores("43.653833032607096%2C-79.37896808855945", 'ice cream');
+  const coffeeStoresData = await getCoffeeStores();
 
   const pathId = coffeeStoresData.map((coffeeStore) => {
     return {params: {id: coffeeStore.id}}
@@ -73,7 +73,7 @@ const CoffeeStorePage = (initialProps) => {
           imageUrl,
           votes: likeCount || 1,
         })
-      }, [id]);
+      }, [coffeeStore, likeCount]);
 
       return await newCoffeeStore.json();
 
@@ -81,11 +81,7 @@ const CoffeeStorePage = (initialProps) => {
     }catch(err){
       console.error('problem creating store in airtable', err);
     }
-  })
-
-  // /api/getCoffeeStoreById?id=${UrlId}
-
-  // const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${UrlId || id}`, fetcher);
+  }, [coffeeStore])
 
 
   useEffect(() => {
@@ -95,18 +91,18 @@ const CoffeeStorePage = (initialProps) => {
           
           if(findCoffeeStore) {
             setCoffeeStore(findCoffeeStore);
-            console.log('triggered create');
             handleCreateCoffeeStore(findCoffeeStore);
             
           }
         }
       } else {
         if(initialProps.coffeeStore){
-          console.log('triggered create 2', initialProps.coffeeStore);
           handleCreateCoffeeStore(initialProps.coffeeStore);
+          setCoffeeStore(initialProps.coffeeStore);
         }
       }
-  }, [UrlId, initialProps.coffeeStore, localCoffeeStores])
+  }, [UrlId, initialProps.coffeeStore, coffeeStore, localCoffeeStores, handleCreateCoffeeStore])
+
 
     const {isLoading, isError, data} = useStore(UrlId);
 
@@ -172,14 +168,14 @@ const CoffeeStorePage = (initialProps) => {
       <h1 className={styles.storeTitle}>{name}</h1>
       <div className={styles.cardContainer}>
         <div className={styles.imageWrapper}>
-          <Image layout='fill' className={styles.image} src={"https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"} alt={name || 'coffee store'} width={600} height={300} />
+          <Image layout='fill' className={styles.image} src={"/static/pamela-lima-unsplash.jpg"} alt={name || 'coffee store'}/>
         </div>
         <div className={cls("glass", styles.detailsContainer)}>
           <div className={styles.details}>
             <p><span className={styles.icon}><GoLocation /></span>{address}</p>
             <p><span className={styles.icon}><TbLocation /></span>{neighborhood}</p>
             {/* <a href={websiteUrl} target="_blank" ><span className={styles.icon}><Image src={'/static/favicon.ico'} width={20} height={20} /></span>{websiteUrl}</a> */}
-            <p className={styles.likes}><span className={styles.icon}>{voted ? <AiFillHeart /> : <AiOutlineHeart />}</span>{likeCount}</p>
+            <p className={styles.likes}><span className={styles.icon}>{voted ? <AiFillHeart /> : <AiOutlineHeart />}</span>{likeCount || 1}</p>
             <div className={styles.buttonWrapper}>
               <button className={voted ? styles.liked : styles.likeButton} disabled={voted} onClick={likeButtonHandler}>Like</button>
             </div>
