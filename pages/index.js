@@ -62,7 +62,7 @@ export default function Home() {
           isFindingLocation={isFindingLocation}
         />
         <div className={styles.heroImage}>
-          <Image src={'/static/hero-image.png'} width={700} height={400} alt='hero image' />
+          <Image src={'/static/hero-image.png'} alt='hero image' width={"700px"} height={"400px"} />
         </div>
         {locationErrorMsg && <h1>Something went wrong: {locationErrorMsg}</h1>}
         {localCoffeeStoresErrorMsg && <h1>Something went wrong: {localCoffeeStoresErrorMsg}</h1>}
