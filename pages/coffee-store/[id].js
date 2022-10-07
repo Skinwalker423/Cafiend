@@ -160,7 +160,7 @@ const CoffeeStorePage = (initialProps) => {
     <div className={styles.container}>
       <Head>
         <title>{name}</title>
-        <meta name={name} content={`Details for ${name}, which include address, neighborhood, and upvotes`} />
+        <meta name='description' content={`Details for ${name}, which include address, neighborhood, and upvotes`} />
       </Head>
       <div className={styles.homeLink}>
         <HiOutlineArrowLeft />

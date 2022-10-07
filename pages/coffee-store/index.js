@@ -9,7 +9,7 @@ const CoffeeStores = () => {
     <div>
       <Head>
         <title>{'Coffee Stores Index'}</title>
-        <meta content={`Coffee stores index page`} />
+        <meta name="description" content={`Coffee stores index page`} />
       </Head>
       <h1>All Stores</h1>
       <Link href={'/'} >Back home</Link>

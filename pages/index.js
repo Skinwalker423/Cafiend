@@ -50,7 +50,7 @@ export default function Home() {
     <div className={styles.container}>
       <Head>
         <title>ICE CREAM DREAMS</title>
-        <meta name='home page' content='Locate your favorite nearby Ice Cream Stores' />
+        <meta name="description" content='Locate your favorite nearby Ice Cream Stores' />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
